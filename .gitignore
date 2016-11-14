@@ -1,0 +1,5 @@
+*.exe
+*.pdb
+*.cache
+*.baml
+*.g.resources
