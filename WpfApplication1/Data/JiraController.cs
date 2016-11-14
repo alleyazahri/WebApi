@@ -34,6 +34,11 @@ namespace WpfApplication1.Data
             return jiraConn.Issues.Queryable.Where(i => i.Project == project).Take(1000000000).ToList();
         }
 
+        public Issue GetIssue(string issueName)
+        {
+            return jiraConn.GetIssue(issueName);
+        }
+
         internal List<JiraIssue> ParseJiraTasks()
         {
             List<Issue> tasks = GetJiraTasks("XWESVC");

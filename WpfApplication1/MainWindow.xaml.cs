@@ -13,8 +13,11 @@ namespace WpfApplication1
     /// </summary>
     public partial class MainWindow : Window
     {
+        private JiraController jc { get; set; }
+
         public MainWindow()
         {
+            jc = new JiraController();
             InitializeComponent();
             InitializeJiraTaskList();
         }
@@ -59,14 +62,14 @@ namespace WpfApplication1
             });
 
             // Populate list
-            JiraController jc = new JiraController();
+            jc = new JiraController();
             jiraTaskList.ItemsSource = //jc.ParseJiraTasks();
             new List<JiraIssue>()
             {
                 new JiraIssue { DevTask = "XWESVC-123", MyTask = "XWESVC-124", Status = "Test", TaskDescription = "Stuff", TaskName = "Things"},
                 new JiraIssue
                 {
-                    DevTask = "XWESVC-321",
+                    DevTask = "XWESVC-955",
                     MyTask = "XWESVC-322",
                     Status = "Beta",
                     TaskDescription = "Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things",
@@ -112,8 +115,8 @@ namespace WpfApplication1
             var s = jiraTaskList.SelectedItem as JiraIssue;
             var taskWindow = new TaskWindow();
             taskWindow.taskWindowLabel.Content = s.DevTask;
-
-            taskWindow.taskWindowTextBlock.Text = "All sorts of stuff"; // TextBox() { Text = "All sorts of stuff" }};
+            var taskInfo = jc.GetIssue(s.DevTask);
+            taskWindow.taskWindowTextBlock.Text = taskInfo.Assignee + " " + taskInfo.Description; // TextBox() { Text = "All sorts of stuff" }};
             taskWindow.Show();
         }
     }
