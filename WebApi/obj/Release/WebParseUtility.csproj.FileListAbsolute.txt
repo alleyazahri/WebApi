@@ -1,0 +1,6 @@
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\bin\Release\WebApi.exe.config
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\bin\Release\WebApi.exe
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\bin\Release\WebApi.pdb
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\obj\Release\WebParseUtility.csprojResolveAssemblyReference.cache
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\obj\Release\WebApi.exe
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\obj\Release\WebApi.pdb
