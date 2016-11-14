@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,42 +24,55 @@ namespace WpfApplication1
             // Add columns
             var gridView = new GridView();
             jiraTaskList.View = gridView;
+            var width = this.Width - 100;
             gridView.Columns.Add(new GridViewColumn
             {
                 Header = "Task To Follow",
-                DisplayMemberBinding = new Binding("DevTask")
+                DisplayMemberBinding = new Binding("DevTask"),
+                Width = width * .15
             });
             gridView.Columns.Add(new GridViewColumn
             {
                 Header = "My Task",
-                DisplayMemberBinding = new Binding("MyTask")
+                DisplayMemberBinding = new Binding("MyTask"),
+                Width = width * .15
             });
             gridView.Columns.Add(new GridViewColumn
             {
                 Header = "Status",
+                Width = width * .1,
                 DisplayMemberBinding = new Binding("Status")
             });
             gridView.Columns.Add(new GridViewColumn
             {
                 Header = "Name",
-                DisplayMemberBinding = new Binding("TaskName")
+                CellTemplate = GetDataTemplate("TaskName"),
+                Width = width * .25
+                //DisplayMemberBinding = new Binding("TaskName")
             });
             gridView.Columns.Add(new GridViewColumn
             {
                 Header = "Description",
                 CellTemplate = GetDataTemplate("TaskDescription"),
-                Width = this.Width - 360
+                Width = width * .35
                 //new TextBlock() { TextWrapping = TextWrapping.Wrap })
             });
 
             // Populate list
             JiraController jc = new JiraController();
-            jiraTaskList.ItemsSource = jc.ParseJiraTasks();
-            //new List<JiraIssue>()
-            //{
-            //    new JiraIssue { DevTask = "XWESVC-123", MyTask = "XWESVC-124", Status = "Test", TaskDescription = "Stuff", TaskName = "Things"},
-            //    new JiraIssue { DevTask = "XWESVC-321", MyTask = "XWESVC-322", Status = "Beta", TaskDescription = "Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things", TaskName = "Asdf"}
-            //};
+            jiraTaskList.ItemsSource = //jc.ParseJiraTasks();
+            new List<JiraIssue>()
+            {
+                new JiraIssue { DevTask = "XWESVC-123", MyTask = "XWESVC-124", Status = "Test", TaskDescription = "Stuff", TaskName = "Things"},
+                new JiraIssue
+                {
+                    DevTask = "XWESVC-321",
+                    MyTask = "XWESVC-322",
+                    Status = "Beta",
+                    TaskDescription = "Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things Here will be a ridiculously long task description just for fun and we shall see how it works and if it word wraps and such and things and stuff and yeah..................You should do things",
+                    TaskName = "Here is a very long task name that is hopefully longer than the default size for this particular column"
+                }
+            };
             //var thingie = jiraTaskList.Items[0] as ListViewItem;
             //jiraTaskList.Style = new Style()
             //{

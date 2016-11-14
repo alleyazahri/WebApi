@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="353.327" Width="526.901" SizeChanged="Window_SizeChanged">
     <Grid>
-        <ListView x:Name="jiraTaskList" Margin="31,37,31,35" Width="459" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" FontFamily="Tahoma" MouseDoubleClick="ListView_MouseDoubleClick">
+        <ListView x:Name="jiraTaskList" Margin="31,37,31,35" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" FontFamily="Tahoma" MouseDoubleClick="ListView_MouseDoubleClick">
             <ListView.View>
                 <GridView>
                 </GridView>
