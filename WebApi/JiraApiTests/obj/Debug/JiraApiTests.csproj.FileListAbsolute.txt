@@ -1,0 +1,16 @@
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\bin\Debug\JiraApiTests.dll
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\bin\Debug\JiraApiTests.pdb
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\bin\Debug\nunit.framework.dll
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\bin\Debug\nunit.framework.xml
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\obj\Debug\JiraApiTests.csprojResolveAssemblyReference.cache
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\obj\Debug\JiraApiTests.dll
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\obj\Debug\JiraApiTests.pdb
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\bin\Debug\JiraApi.dll
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\bin\Debug\Atlassian.Jira.dll
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\bin\Debug\JiraApi.pdb
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\bin\Debug\Atlassian.Jira.pdb
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\bin\Debug\Atlassian.Jira.xml
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\bin\Debug\RestSharp.dll
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\bin\Debug\RestSharp.xml
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\bin\Debug\Newtonsoft.Json.dll
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\WebApi\JiraApiTests\bin\Debug\Newtonsoft.Json.xml
