@@ -7,5 +7,10 @@
         public string Status { get; set; }
         public string TaskName { get; set; }
         public string TaskDescription { get; set; }
+
+        public object[] ToStringArray()
+        {
+            return new object[] { DevTask, MyTask, Status, TaskName, TaskDescription };
+        }
     }
 }
