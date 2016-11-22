@@ -1,6 +1,6 @@
 ﻿namespace JiraApi
 {
-    internal class UserController
+    public class UserController
     {
         private LoginController Lc { get; }
 
@@ -13,5 +13,10 @@
         {
             return Lc.JiraConnection.Users.GetUserAsync(userId).Result.DisplayName;
         }
+
+        //public string GetUserId(string displayName)
+        //{
+        //    return Lc.JiraConnection.Users.GetUserAsync(displayName).Result.Username;
+        //}
     }
 }

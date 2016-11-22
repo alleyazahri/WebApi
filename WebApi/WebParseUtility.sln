@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebParseUtility", "WebParse
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApplication1", "..\WpfApplication1\WpfApplication1.csproj", "{346FBEA3-62BB-4F3D-8589-731F16FC9501}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraTasks", "..\JiraTasks\JiraTasks.csproj", "{76EFD1DF-C4E0-4878-AA67-76339F296F07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraGUI", "..\JiraTasks\JiraGUI.csproj", "{76EFD1DF-C4E0-4878-AA67-76339F296F07}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraApi", "..\JiraApi\JiraApi.csproj", "{4F415344-627B-40CB-B8DB-2C5427BF6B64}"
 EndProject

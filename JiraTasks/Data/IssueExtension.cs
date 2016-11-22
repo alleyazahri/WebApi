@@ -6,7 +6,7 @@ namespace JiraTasks.Data
     {
         public static object[] ToStringArray(this Issue issue)
         {
-            return new object[] { issue.Key.Value, "", issue.Status.Name, issue.Description, issue.Summary };
+            return new object[] { issue.Key.Value, "", issue.Status.Name, issue.Summary, issue.Description };
         }
     }
 }

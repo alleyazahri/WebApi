@@ -45,18 +45,18 @@
             // usernameLabel
             // 
             this.usernameLabel.AutoSize = true;
-            this.usernameLabel.Location = new System.Drawing.Point(35, 40);
+            this.usernameLabel.Location = new System.Drawing.Point(31, 32);
             this.usernameLabel.Name = "usernameLabel";
-            this.usernameLabel.Size = new System.Drawing.Size(83, 20);
+            this.usernameLabel.Size = new System.Drawing.Size(71, 16);
             this.usernameLabel.TabIndex = 0;
             this.usernameLabel.Text = "Username";
             // 
             // passwordLabel
             // 
             this.passwordLabel.AutoSize = true;
-            this.passwordLabel.Location = new System.Drawing.Point(35, 92);
+            this.passwordLabel.Location = new System.Drawing.Point(31, 74);
             this.passwordLabel.Name = "passwordLabel";
-            this.passwordLabel.Size = new System.Drawing.Size(78, 20);
+            this.passwordLabel.Size = new System.Drawing.Size(68, 16);
             this.passwordLabel.TabIndex = 1;
             this.passwordLabel.Text = "Password";
             // 
@@ -64,18 +64,20 @@
             // 
             this.tbUsername.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbUsername.Location = new System.Drawing.Point(143, 40);
+            this.tbUsername.Location = new System.Drawing.Point(127, 32);
+            this.tbUsername.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbUsername.Name = "tbUsername";
-            this.tbUsername.Size = new System.Drawing.Size(519, 26);
+            this.tbUsername.Size = new System.Drawing.Size(462, 22);
             this.tbUsername.TabIndex = 2;
             this.tbUsername.TextChanged += new System.EventHandler(this.tbUsername_TextChanged);
             // 
             // bLogin
             // 
             this.bLogin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bLogin.Location = new System.Drawing.Point(516, 147);
+            this.bLogin.Location = new System.Drawing.Point(459, 118);
+            this.bLogin.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.bLogin.Name = "bLogin";
-            this.bLogin.Size = new System.Drawing.Size(146, 42);
+            this.bLogin.Size = new System.Drawing.Size(130, 34);
             this.bLogin.TabIndex = 4;
             this.bLogin.Text = "Login";
             this.bLogin.UseVisualStyleBackColor = true;
@@ -85,10 +87,11 @@
             // 
             this.tbPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbPassword.Location = new System.Drawing.Point(143, 89);
+            this.tbPassword.Location = new System.Drawing.Point(127, 71);
+            this.tbPassword.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tbPassword.Name = "tbPassword";
             this.tbPassword.PasswordChar = '*';
-            this.tbPassword.Size = new System.Drawing.Size(518, 26);
+            this.tbPassword.Size = new System.Drawing.Size(461, 22);
             this.tbPassword.TabIndex = 3;
             this.tbPassword.TextChanged += new System.EventHandler(this.tbPassword_TextChanged);
             // 
@@ -96,9 +99,10 @@
             // 
             this.cbLoginAutomatically.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbLoginAutomatically.AutoSize = true;
-            this.cbLoginAutomatically.Location = new System.Drawing.Point(82, 130);
+            this.cbLoginAutomatically.Location = new System.Drawing.Point(73, 102);
+            this.cbLoginAutomatically.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbLoginAutomatically.Name = "cbLoginAutomatically";
-            this.cbLoginAutomatically.Size = new System.Drawing.Size(172, 24);
+            this.cbLoginAutomatically.Size = new System.Drawing.Size(150, 21);
             this.cbLoginAutomatically.TabIndex = 5;
             this.cbLoginAutomatically.Text = "Login Automatically";
             this.cbLoginAutomatically.UseVisualStyleBackColor = true;
@@ -110,9 +114,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
             this.panel1.Controls.Add(this.lWarning);
-            this.panel1.Location = new System.Drawing.Point(39, 158);
+            this.panel1.Location = new System.Drawing.Point(35, 126);
+            this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(459, 42);
+            this.panel1.Size = new System.Drawing.Size(408, 34);
             this.panel1.TabIndex = 6;
             this.panel1.Visible = false;
             // 
@@ -120,18 +125,19 @@
             // 
             this.lWarning.AutoSize = true;
             this.lWarning.ForeColor = System.Drawing.Color.DarkRed;
-            this.lWarning.Location = new System.Drawing.Point(3, 11);
+            this.lWarning.Location = new System.Drawing.Point(3, 9);
             this.lWarning.Name = "lWarning";
-            this.lWarning.Size = new System.Drawing.Size(434, 20);
+            this.lWarning.Size = new System.Drawing.Size(369, 16);
             this.lWarning.TabIndex = 0;
             this.lWarning.Text = "WARNING: Password is stored locally which can be insecure";
             // 
             // pLoginFailed
             // 
             this.pLoginFailed.Controls.Add(this.lLoginFailed);
-            this.pLoginFailed.Location = new System.Drawing.Point(467, 120);
+            this.pLoginFailed.Location = new System.Drawing.Point(415, 96);
+            this.pLoginFailed.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pLoginFailed.Name = "pLoginFailed";
-            this.pLoginFailed.Size = new System.Drawing.Size(229, 27);
+            this.pLoginFailed.Size = new System.Drawing.Size(204, 22);
             this.pLoginFailed.TabIndex = 7;
             this.pLoginFailed.Visible = false;
             // 
@@ -139,18 +145,19 @@
             // 
             this.lLoginFailed.AutoSize = true;
             this.lLoginFailed.ForeColor = System.Drawing.Color.Red;
-            this.lLoginFailed.Location = new System.Drawing.Point(71, 5);
+            this.lLoginFailed.Location = new System.Drawing.Point(63, 4);
             this.lLoginFailed.Name = "lLoginFailed";
-            this.lLoginFailed.Size = new System.Drawing.Size(95, 20);
+            this.lLoginFailed.Size = new System.Drawing.Size(82, 16);
             this.lLoginFailed.TabIndex = 0;
             this.lLoginFailed.Text = "Login Failed";
             // 
             // Login
             // 
             this.AcceptButton = this.bLogin;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(704, 212);
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(626, 170);
             this.Controls.Add(this.pLoginFailed);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.cbLoginAutomatically);
@@ -160,6 +167,7 @@
             this.Controls.Add(this.passwordLabel);
             this.Controls.Add(this.usernameLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Login";

@@ -33,12 +33,17 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pLoginToViewTasks = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.projectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xWESVCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pLoginToViewTasks = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.savedFiltersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveCurrentFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tasksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.linkTaskToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unlinkTaskToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dgJiraTaskList)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.pLoginToViewTasks.SuspendLayout();
@@ -50,10 +55,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgJiraTaskList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgJiraTaskList.Location = new System.Drawing.Point(52, 161);
+            this.dgJiraTaskList.Location = new System.Drawing.Point(46, 129);
+            this.dgJiraTaskList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dgJiraTaskList.Name = "dgJiraTaskList";
             this.dgJiraTaskList.RowTemplate.Height = 28;
-            this.dgJiraTaskList.Size = new System.Drawing.Size(1414, 1069);
+            this.dgJiraTaskList.Size = new System.Drawing.Size(1257, 855);
             this.dgJiraTaskList.TabIndex = 0;
             this.dgJiraTaskList.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgJiraTaskList_CellMouseDoubleClick);
             this.dgJiraTaskList.SelectionChanged += new System.EventHandler(this.dgJiraTaskList_SelectionChanged);
@@ -63,10 +69,13 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.filterToolStripMenuItem});
+            this.filterToolStripMenuItem,
+            this.savedFiltersToolStripMenuItem,
+            this.tasksToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1512, 33);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(1344, 33);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -95,25 +104,6 @@
             this.logoutToolStripMenuItem.Text = "L&ogout";
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
             // 
-            // pLoginToViewTasks
-            // 
-            this.pLoginToViewTasks.Controls.Add(this.label1);
-            this.pLoginToViewTasks.Location = new System.Drawing.Point(414, 586);
-            this.pLoginToViewTasks.Name = "pLoginToViewTasks";
-            this.pLoginToViewTasks.Size = new System.Drawing.Size(725, 55);
-            this.pLoginToViewTasks.TabIndex = 2;
-            this.pLoginToViewTasks.Visible = false;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(221, 14);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(326, 29);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Please Log In To View Tasks";
-            // 
             // filterToolStripMenuItem
             // 
             this.filterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -136,7 +126,7 @@
             this.xWESVCToolStripMenuItem.Checked = true;
             this.xWESVCToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.xWESVCToolStripMenuItem.Name = "xWESVCToolStripMenuItem";
-            this.xWESVCToolStripMenuItem.Size = new System.Drawing.Size(211, 30);
+            this.xWESVCToolStripMenuItem.Size = new System.Drawing.Size(261, 30);
             this.xWESVCToolStripMenuItem.Text = "XWESVC";
             // 
             // addProjectToolStripMenuItem
@@ -146,15 +136,72 @@
             this.addProjectToolStripMenuItem.Text = "Add/Remove Project";
             this.addProjectToolStripMenuItem.Click += new System.EventHandler(this.addProjectToolStripMenuItem_Click);
             // 
+            // pLoginToViewTasks
+            // 
+            this.pLoginToViewTasks.Controls.Add(this.label1);
+            this.pLoginToViewTasks.Location = new System.Drawing.Point(368, 469);
+            this.pLoginToViewTasks.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pLoginToViewTasks.Name = "pLoginToViewTasks";
+            this.pLoginToViewTasks.Size = new System.Drawing.Size(644, 44);
+            this.pLoginToViewTasks.TabIndex = 2;
+            this.pLoginToViewTasks.Visible = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(196, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(326, 29);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Please Log In To View Tasks";
+            // 
+            // savedFiltersToolStripMenuItem
+            // 
+            this.savedFiltersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveCurrentFilterToolStripMenuItem});
+            this.savedFiltersToolStripMenuItem.Name = "savedFiltersToolStripMenuItem";
+            this.savedFiltersToolStripMenuItem.Size = new System.Drawing.Size(123, 29);
+            this.savedFiltersToolStripMenuItem.Text = "Saved Filters";
+            // 
+            // saveCurrentFilterToolStripMenuItem
+            // 
+            this.saveCurrentFilterToolStripMenuItem.Name = "saveCurrentFilterToolStripMenuItem";
+            this.saveCurrentFilterToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+            this.saveCurrentFilterToolStripMenuItem.Text = "+Save Current Filter";
+            // 
+            // tasksToolStripMenuItem
+            // 
+            this.tasksToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.linkTaskToolStripMenuItem,
+            this.unlinkTaskToolStripMenuItem});
+            this.tasksToolStripMenuItem.Name = "tasksToolStripMenuItem";
+            this.tasksToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
+            this.tasksToolStripMenuItem.Text = "Tasks";
+            // 
+            // linkTaskToolStripMenuItem
+            // 
+            this.linkTaskToolStripMenuItem.Name = "linkTaskToolStripMenuItem";
+            this.linkTaskToolStripMenuItem.Size = new System.Drawing.Size(211, 30);
+            this.linkTaskToolStripMenuItem.Text = "Link Task";
+            this.linkTaskToolStripMenuItem.Click += new System.EventHandler(this.linkTaskToolStripMenuItem_Click);
+            // 
+            // unlinkTaskToolStripMenuItem
+            // 
+            this.unlinkTaskToolStripMenuItem.Name = "unlinkTaskToolStripMenuItem";
+            this.unlinkTaskToolStripMenuItem.Size = new System.Drawing.Size(211, 30);
+            this.unlinkTaskToolStripMenuItem.Text = "Unlink Task";
+            // 
             // TaskList
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1512, 1264);
+            this.ClientSize = new System.Drawing.Size(1344, 1011);
             this.Controls.Add(this.pLoginToViewTasks);
             this.Controls.Add(this.dgJiraTaskList);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "TaskList";
             this.Text = "Jira Task List";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TaskList_FormClosing);
@@ -183,6 +230,11 @@
         private System.Windows.Forms.ToolStripMenuItem projectsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem xWESVCToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addProjectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem savedFiltersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveCurrentFilterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tasksToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem linkTaskToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unlinkTaskToolStripMenuItem;
     }
 }
 
