@@ -1,3 +1,5 @@
+*.vhost.exe.manifest
+*.suo
 *.exe
 *.pdb
 *.cache
