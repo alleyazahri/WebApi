@@ -1,7 +1,9 @@
 *.vhost.exe.manifest
-*.suo
+WebApi/.vs/WebParseUtility/v14/.suo
 *.exe
 *.pdb
 *.cache
 *.baml
 *.g.resources
+JiraApi.dll
+JiraApiTests.dll
