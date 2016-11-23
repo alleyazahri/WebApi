@@ -1,4 +1,5 @@
 *.vhost.exe.manifest
+*.vshost.exe.manifest
 WebApi/.vs/WebParseUtility/v14/.suo
 *.exe
 *.pdb
@@ -7,3 +8,9 @@ WebApi/.vs/WebParseUtility/v14/.suo
 *.g.resources
 JiraApi.dll
 JiraApiTests.dll
+*.manifest
+*.FileListAbsolute.txt
+Newtonsoft.Json.dll
+Newtonsoft.Json.xml
+RestSharp.dll
+RestSharp.xml
