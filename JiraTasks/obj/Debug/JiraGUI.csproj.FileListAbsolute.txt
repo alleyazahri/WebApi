@@ -15,8 +15,8 @@ C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\JiraTasks\bin\Debug
 C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\JiraTasks\obj\Debug\JiraGUI.csprojResolveAssemblyReference.cache
 C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\JiraTasks\obj\Debug\JiraTasks.Login.resources
 C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\JiraTasks\obj\Debug\JiraTasks.Properties.Resources.resources
-C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\JiraTasks\obj\Debug\JiraTasks.TaskList.resources
 C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\JiraTasks\obj\Debug\JiraGUI.csproj.GenerateResource.Cache
 C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\JiraTasks\obj\Debug\JiraTasks.exe
 C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\JiraTasks\obj\Debug\JiraTasks.pdb
 C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\JiraTasks\obj\Debug\JiraTasks.LinkTasks.resources
+C:\Users\i59098\Documents\Visual Studio 2015\Projects\WebApi\JiraTasks\obj\Debug\JiraTasks.MainWindow.resources
