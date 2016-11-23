@@ -18,6 +18,7 @@ namespace JiraTasks
         public Login()
         {
             loginSettings = new LoginSettingsDocument();
+            LogCont = new LoginController();
             SettingsPath = Environment.GetEnvironmentVariable("AppData");
             SettingsPath = SettingsPath.Replace("Roaming", "Local") + "\\JiraUtil";
             var loaded = loginSettings.Load(SettingsPath, SettingsFile);
@@ -32,7 +33,6 @@ namespace JiraTasks
             loginSettings.Username = tbUsername.Text;
             loginSettings.Password = tbPassword.Text;
             loginSettings.SavePassword = cbLoginAutomatically.CheckState;
-            LogCont = new LoginController();
             var result = false;
             if (!string.IsNullOrEmpty(loginSettings.Username) && !string.IsNullOrEmpty(loginSettings.Password))
                 result = LogCont.Login(JiraUrl, loginSettings.Username, loginSettings.Password);
