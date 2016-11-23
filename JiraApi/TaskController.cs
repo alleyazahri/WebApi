@@ -27,8 +27,6 @@ namespace JiraApi
             tasks = FilterByAssignee(filter, tasks);
             tasks = FilterByStatus(filter, tasks);
 
-            var asdf = tasks.FirstOrDefault(x => x.Key.Value == "XWESVC-7");
-
             return tasks.Take(numIssues).ToList();
         }
 
@@ -138,8 +136,6 @@ namespace JiraApi
             }
             else
             {
-                var asdf = tasks.FirstOrDefault(i => i.Key.Value == "XWESVC-991");
-                var fdsa = tasks.FirstOrDefault(i => i.Key.Value == "XWESVC-956");
                 filteredTasks.AddRange(tasks.Where(i => i.Updated != null &&
                              DateTime.Compare(i.Updated.Value, filter.UpdatedSince.Value) >= 0));
             }
