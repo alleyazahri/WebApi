@@ -26,6 +26,7 @@ namespace JiraTasks.MainWindowBusi
         internal List<CompoundIssue> CompareTasksToUserPrefs(List<Issue> tasks, Dictionary<string, string> linkedTasks)
         {
             var issueList = new List<CompoundIssue>();
+            var removeIssues = new List<string>();
             foreach (var issue in tasks)
             {
                 if (linkedTasks.ContainsKey(issue.Key.Value))
@@ -36,6 +37,10 @@ namespace JiraTasks.MainWindowBusi
                 {
                     issueList.Add(new CompoundIssue() { DevTask = issue });
                 }
+            }
+            foreach (var removeIssue in removeIssues)
+            {
+                issueList.RemoveAll(x => x.DevTask.Key.Value == removeIssue);
             }
             return issueList;
         }

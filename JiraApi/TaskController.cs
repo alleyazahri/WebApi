@@ -19,7 +19,7 @@ namespace JiraApi
             var propsNotNull = filter?.PropertiesNotNull();
             if (filter == null || propsNotNull == "")
             {
-                return Lc.JiraConnection.Issues.Queryable.Select(x => x).Take(numIssues).ToList();
+                return Lc.JiraConnection.Issues.Select(x => x).Take(numIssues).ToList();
             }
             List<Issue> tasks = FilterProjects(filter);
             tasks = FilterByUpdatedDate(filter, tasks);
@@ -32,7 +32,7 @@ namespace JiraApi
 
         public Issue GetIssue(string issueId)
         {
-            return Lc.JiraConnection.Issues.Queryable.FirstOrDefault(i => i.Key == issueId.ToUpper());
+            return Lc.JiraConnection.Issues.FirstOrDefault(i => i.Key == issueId.ToUpper());
         }
 
         private List<Issue> FilterByStatus(TaskFilter filter, List<Issue> tasks)
@@ -48,7 +48,6 @@ namespace JiraApi
                         Lc
                             .JiraConnection
                             .Issues
-                            .Queryable
                             .Where(
                                 i =>
                                     i.Status.Name.ToLower() == status.ToLower())
@@ -78,7 +77,6 @@ namespace JiraApi
                         Lc
                             .JiraConnection
                             .Issues
-                            .Queryable
                             .Where(
                                 i =>
                                     i.Assignee.ToLower() == assignee.ToLower())
@@ -107,7 +105,6 @@ namespace JiraApi
                     Lc
                         .JiraConnection
                         .Issues
-                        .Queryable
                         .Where(i => i.ResolutionDate == null || DateTime.Compare(i.ResolutionDate.Value, filter.ResolutionDateAfter.Value) >= 0)
                         .Take(9999));
             }
@@ -130,7 +127,6 @@ namespace JiraApi
                     Lc
                         .JiraConnection
                         .Issues
-                        .Queryable
                         .Where(i => i.Updated != null && DateTime.Compare(i.Updated.Value, filter.UpdatedSince.Value) >= 0)
                         .Take(9999));
             }
@@ -149,7 +145,7 @@ namespace JiraApi
             var tasks = new List<Issue>();
             foreach (var project in filter.Project)
             {
-                tasks.AddRange(Lc.JiraConnection.Issues.Queryable.Where(x => x.Project == project.ToUpper()).Take(9999));
+                tasks.AddRange(Lc.JiraConnection.Issues.Where(x => x.Project == project.ToUpper()).Take(9999));
             }
             return tasks;
         }

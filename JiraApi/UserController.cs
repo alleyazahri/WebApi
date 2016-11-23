@@ -11,7 +11,8 @@
 
         public string GetDisplayName(string userId)
         {
-            return Lc.JiraConnection.Users.GetUserAsync(userId).Result.DisplayName;
+            //return Lc.JiraConnection.Users.GetUserAsync(userId).Result.DisplayName;
+            return null;
         }
 
         //public string GetUserId(string displayName)

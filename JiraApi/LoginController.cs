@@ -1,5 +1,6 @@
 ﻿using Atlassian.Jira;
 using System;
+using System.Linq;
 
 namespace JiraApi
 {
@@ -12,7 +13,7 @@ namespace JiraApi
             JiraConnection = Jira.CreateRestClient(url, username, password);
             try
             {
-                var jiraUser = JiraConnection.Users.GetUserAsync("I59098").Result;
+                var jiraUser = JiraConnection.Issues.Where(x => x.Key == "XWESVC-955");
                 return true;
             }
             catch (Exception)
