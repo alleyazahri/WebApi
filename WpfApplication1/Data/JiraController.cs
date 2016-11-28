@@ -36,7 +36,8 @@ namespace WpfApplication1.Data
 
         public Issue GetIssue(string issueName)
         {
-            return jiraConn.GetIssue(issueName);
+            //return jiraConn.GetIssue(issueName);
+            return null;
         }
 
         internal List<JiraIssue> ParseJiraTasks()

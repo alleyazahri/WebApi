@@ -142,7 +142,9 @@ namespace JiraTasks
 
             dgJiraTaskList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dgJiraTaskList.Columns[3].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgJiraTaskList.Columns[3].Width = (int)((this.Width - 60) * .2);
             dgJiraTaskList.Columns[4].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dgJiraTaskList.Columns[4].Width = (int)((this.Width - 60) * .4);
 
             dgJiraTaskList.AllowUserToAddRows = false;
             dgJiraTaskList.AllowUserToOrderColumns = true;

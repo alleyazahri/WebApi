@@ -17,12 +17,17 @@ namespace JiraTasks
 
         public Login()
         {
+            bool result = false;
             loginSettings = new LoginSettingsDocument();
             LogCont = new LoginController();
             SettingsPath = Environment.GetEnvironmentVariable("AppData");
             SettingsPath = SettingsPath.Replace("Roaming", "Local") + "\\JiraUtil";
             var loaded = loginSettings.Load(SettingsPath, SettingsFile);
             if (!loaded || loginSettings.SavePassword != CheckState.Checked)
+                InitializeComponent();
+            else
+                result = LoginToJira();
+            if (!result)
                 InitializeComponent();
         }
 
@@ -33,9 +38,7 @@ namespace JiraTasks
             loginSettings.Username = tbUsername.Text;
             loginSettings.Password = tbPassword.Text;
             loginSettings.SavePassword = cbLoginAutomatically.CheckState;
-            var result = false;
-            if (!string.IsNullOrEmpty(loginSettings.Username) && !string.IsNullOrEmpty(loginSettings.Password))
-                result = LogCont.Login(JiraUrl, loginSettings.Username, loginSettings.Password);
+            var result = LoginToJira();
             if (result)
             {
                 loginSettings.Save(SettingsPath, SettingsFile);
@@ -76,6 +79,17 @@ namespace JiraTasks
         private void Login_FormClosed(object sender, FormClosedEventArgs e)
         {
             pLoginFailed.Visible = false;
+            tbUsername.Text = "";
+            tbPassword.Text = "";
+            cbLoginAutomatically.CheckState = CheckState.Unchecked;
+        }
+
+        private bool LoginToJira()
+        {
+            var result = false;
+            if (!string.IsNullOrEmpty(loginSettings.Username) && !string.IsNullOrEmpty(loginSettings.Password))
+                result = LogCont.Login(JiraUrl, loginSettings.Username, loginSettings.Password);
+            return result;
         }
     }
 }
