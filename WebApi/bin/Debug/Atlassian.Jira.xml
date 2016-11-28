@@ -163,6 +163,23 @@
             <param name="userName">Name of user to remove.</param>
             <param name="token">Cancellation token for this operation.</param>
         </member>
+        <member name="T:Atlassian.Jira.IssueLabelCollection">
+            <summary>
+            Collection of labels for an issue.
+            </summary>
+        </member>
+        <member name="M:Atlassian.Jira.IssueLabelCollection.#ctor(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Creates a new instance of IssueLabelCollection.
+            </summary>
+            <param name="labels">Labels to seed into this collection</param>
+        </member>
+        <member name="M:Atlassian.Jira.IssueLabelCollection.Add(System.String[])">
+            <summary>
+            Adds labels to this collection.
+            </summary>
+            <param name="labels">The list of labels to add.</param>
+        </member>
         <member name="T:Atlassian.Jira.IssueSecurityLevel">
             <summary>
             Represents the security level that can be set on an issue.
@@ -294,7 +311,7 @@
             <param name="issueKey">Key of issue to delete.</param>
             <param name="token">Cancellation token for this operation.</param>
         </member>
-        <member name="M:Atlassian.Jira.IIssueService.GetIsssuesFromJqlAsync(System.String,System.Nullable{System.Int32},System.Int32,System.Threading.CancellationToken)">
+        <member name="M:Atlassian.Jira.IIssueService.GetIssuesFromJqlAsync(System.String,System.Nullable{System.Int32},System.Int32,System.Threading.CancellationToken)">
             <summary>
             Execute a specific JQL query and return the resulting issues.
             </summary>
@@ -592,7 +609,7 @@
             <param name="startAt">Index of the first user to return (0-based).</param>
             <param name="token">Cancellation token for this operation.</param>
         </member>
-        <member name="M:Atlassian.Jira.IJiraUserService.CreatUserAsync(Atlassian.Jira.JiraUserCreationInfo,System.Threading.CancellationToken)">
+        <member name="M:Atlassian.Jira.IJiraUserService.CreateUserAsync(Atlassian.Jira.JiraUserCreationInfo,System.Threading.CancellationToken)">
             <summary>
             Creates a user.
             </summary>
@@ -893,40 +910,6 @@
             New value of the field.
             </summary>
         </member>
-        <member name="T:Atlassian.Jira.IssueLabels">
-            <summary>
-            Represents the list of labels that can be set on an issue.
-            </summary>
-        </member>
-        <member name="P:Atlassian.Jira.IssueLabels.Cached">
-            <summary>
-            The list of labels when the issue was retrieved from the server.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.IssueLabels.Set(System.String[])">
-            <summary>
-            Sets the labels of the issue.
-            </summary>
-            <param name="labels">The label(s) to set.</param>
-        </member>
-        <member name="M:Atlassian.Jira.IssueLabels.SetAsync(System.String[],System.Threading.CancellationToken)">
-            <summary>
-            Sets the labels of the issue.
-            </summary>
-            <param name="labels">The label(s) to set.</param>
-            <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.IssueLabels.Get">
-            <summary>
-            Gets the latest labels of the issue from the server.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.IssueLabels.GetAsync(System.Threading.CancellationToken)">
-            <summary>
-            Gets the latest labels of the issue from the server.
-            </summary>
-            <param name="token">Cancellation token for this operation.</param>
-        </member>
         <member name="T:Atlassian.Jira.IssueLink">
             <summary>
             Represents a link between two issues.
@@ -977,112 +960,6 @@
             Description of the category.
             </summary>
         </member>
-        <member name="T:Atlassian.Jira.ProjectComponentsEditableResource">
-            Class that encapsulates operations on the remote components collection of a project.
-        </member>
-        <member name="M:Atlassian.Jira.ProjectComponentsEditableResource.#ctor(Atlassian.Jira.Jira,Atlassian.Jira.Project)">
-            <summary>
-            Creates a new instance of the ProjectComponentsEditableResource.
-            </summary>
-            <param name="jira">Instance of the Jira client.</param>
-            <param name="project">The project on which to target the operations.</param>
-        </member>
-        <member name="M:Atlassian.Jira.ProjectComponentsEditableResource.Get">
-            <summary>
-            Gets the components for the current project.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.ProjectComponentsEditableResource.GetAsync(System.Threading.CancellationToken)">
-            <summary>
-            Gets the components for the current project.
-            </summary>
-            <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.ProjectComponentsEditableResource.Add(Atlassian.Jira.ProjectComponentCreationInfo)">
-            <summary>
-            Creates and adds a new component the current project.
-            </summary>
-            <param name="projectComponent">Information of the new component.</param>
-        </member>
-        <member name="M:Atlassian.Jira.ProjectComponentsEditableResource.AddAsync(Atlassian.Jira.ProjectComponentCreationInfo,System.Threading.CancellationToken)">
-            <summary>
-            Creates and adds a new component to a project.
-            </summary>
-            <param name="projectComponent">Information of the new component.</param>
-            <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.ProjectComponentsEditableResource.Delete(System.String,System.String)">
-            <summary>
-            Deletes a component from a project.
-            </summary>
-            <param name="componentName">Name of the component to remove.</param>
-            <param name="moveIssuesTo">The component to set on issues where the deleted component is the component, If null then the component is removed.</param>
-        </member>
-        <member name="M:Atlassian.Jira.ProjectComponentsEditableResource.DeleteAsync(System.String,System.String,System.Threading.CancellationToken)">
-            <summary>
-            Deletes a component from a project.
-            </summary>
-            <param name="componentName">Name of the component to remove.</param>
-            <param name="moveIssuesTo">The component to set on issues where the deleted component is the component, If null then the component is removed.</param>
-            <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="T:Atlassian.Jira.ProjectVersionsEditableResource">
-            <summary>
-            Class that encapsulates operations on the remote version collection of a project.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.ProjectVersionsEditableResource.#ctor(Atlassian.Jira.Jira,Atlassian.Jira.Project)">
-            <summary>
-            Creates a new instance of the ProjectVersionsEditableResource.
-            </summary>
-            <param name="jira">Instance of the Jira client.</param>
-            <param name="project">The project on which to target the operations.</param>
-        </member>
-        <member name="M:Atlassian.Jira.ProjectVersionsEditableResource.Get(System.Int32,System.Int32)">
-            <summary>
-            Gets the paged versions for the current project (not-cached).
-            </summary>
-            <param name="startAt">The page offset, if not specified then defaults to 0.</param>
-            <param name="maxResults">How many results on the page should be included. Defaults to 50.</param>
-        </member>
-        <member name="M:Atlassian.Jira.ProjectVersionsEditableResource.GetAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
-            <summary>
-            Gets the paged versions for the current project (not-cached).
-            </summary>
-            <param name="startAt">The page offset, if not specified then defaults to 0.</param>
-            <param name="maxResults">How many results on the page should be included. Defaults to 50.</param>
-            <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.ProjectVersionsEditableResource.Add(Atlassian.Jira.ProjectVersionCreationInfo)">
-            <summary>
-            Creates and adds a new version to a project.
-            </summary>
-            <param name="projectVersion">Information of the new version.</param>
-        </member>
-        <member name="M:Atlassian.Jira.ProjectVersionsEditableResource.AddAsync(Atlassian.Jira.ProjectVersionCreationInfo,System.Threading.CancellationToken)">
-            <summary>
-            Creates and adds a new version to a project.
-            </summary>
-            <param name="projectVersion">Information of the new version.</param>
-            <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.ProjectVersionsEditableResource.Delete(System.String,System.String,System.String)">
-            <summary>
-            Deletes a version from a project.
-            </summary>
-            <param name="versionName">Name of the version to remove.</param>
-            <param name="moveFixIssuesTo">The version to set fixVersion to on issues where the deleted version is the fix version, If null then the fixVersion is removed.</param>
-            <param name="moveAffectedIssuesTo">The version to set fixVersion to on issues where the deleted version is the fix version, If null then the fixVersion is removed.</param>
-        </member>
-        <member name="M:Atlassian.Jira.ProjectVersionsEditableResource.DeleteAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
-            <summary>
-            Deletes a version from a project.
-            </summary>
-            <param name="versionName">Name of the version to remove.</param>
-            <param name="moveFixIssuesTo">The version to set fixVersion to on issues where the deleted version is the fix version, If null then the fixVersion is removed.</param>
-            <param name="moveAffectedIssuesTo">The version to set fixVersion to on issues where the deleted version is the fix version, If null then the fixVersion is removed.</param>
-            <param name="token">Cancellation token for this operation.</param>
-        </member>
         <member name="T:Atlassian.Jira.Remote.IJiraRestClient">
             <summary>
             Contract for a client that iteracts with JIRA via rest.
@@ -1103,26 +980,12 @@
             Settings to configure the rest client.
             </summary>
         </member>
-        <member name="M:Atlassian.Jira.Remote.IJiraRestClient.ExecuteRequest(RestSharp.IRestRequest)">
-            <summary>
-            Executes a request.
-            </summary>
-            <param name="request">Request object.</param>
-        </member>
         <member name="M:Atlassian.Jira.Remote.IJiraRestClient.ExecuteRequestAsync(RestSharp.IRestRequest,System.Threading.CancellationToken)">
             <summary>
             Executes a request.
             </summary>
             <param name="request">Request object.</param>
             <param name="token">Cancellation token for the operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.Remote.IJiraRestClient.ExecuteRequest(RestSharp.Method,System.String,System.Object)">
-            <summary>
-            Executes a request and returns the response as JSON.
-            </summary>
-            <param name="method">Request method.</param>
-            <param name="resource">Request resource url.</param>
-            <param name="requestBody">Request body to be serialized.</param>
         </member>
         <member name="M:Atlassian.Jira.Remote.IJiraRestClient.ExecuteRequestAsync(RestSharp.Method,System.String,System.Object,System.Threading.CancellationToken)">
             <summary>
@@ -1132,15 +995,6 @@
             <param name="resource">Request resource url.</param>
             <param name="requestBody">Request body to be serialized.</param>
             <param name="token">Cancellation token for the operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.Remote.IJiraRestClient.ExecuteRequest``1(RestSharp.Method,System.String,System.Object)">
-            <summary>
-            Executes a request and serializes the response to an object.
-            </summary>
-            <typeparam name="T">Type to serialize the reponse.</typeparam>
-            <param name="method">Request method.</param>
-            <param name="resource">Request resource url.</param>
-            <param name="requestBody">Request body to be serialized.</param>
         </member>
         <member name="M:Atlassian.Jira.Remote.IJiraRestClient.ExecuteRequestAsync``1(RestSharp.Method,System.String,System.Object,System.Threading.CancellationToken)">
             <summary>
@@ -1491,6 +1345,9 @@
         <member name="P:Atlassian.Jira.Remote.RemoteVersion.archived">
             <remarks/>
         </member>
+        <member name="P:Atlassian.Jira.Remote.RemoteVersion.startDate">
+            <remarks/>
+        </member>
         <member name="P:Atlassian.Jira.Remote.RemoteVersion.releaseDate">
             <remarks/>
         </member>
@@ -1682,48 +1539,6 @@
             Attribute that can be applied to properties to modify the name of the remotefield used when updating an issue
             </summary>
         </member>
-        <member name="T:Atlassian.Jira.IssueWatchers">
-            <summary>
-            Represents the list of users that are watching an issue.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.IssueWatchers.Remove(System.String)">
-            <summary>
-            Removes a user from the watchers of the issue.
-            </summary>
-            <param name="username">Username of the user to add.</param>
-        </member>
-        <member name="M:Atlassian.Jira.IssueWatchers.RemoveAsync(System.String,System.Threading.CancellationToken)">
-            <summary>
-            Removes a user from the watchers of the issue.
-            </summary>
-            <param name="username">Username of the user to add.</param>
-            <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.IssueWatchers.Add(System.String)">
-            <summary>
-            Adds a user to the watchers of the issue.
-            </summary>
-            <param name="username"></param>
-        </member>
-        <member name="M:Atlassian.Jira.IssueWatchers.AddAsync(System.String,System.Threading.CancellationToken)">
-            <summary>
-            Adds a user to the watchers of the issue.
-            </summary>
-            <param name="username">Username of the user to add.</param>
-            <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.IssueWatchers.Get">
-            <summary>
-            Gets the users that are watching the issue.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.IssueWatchers.GetAsync(System.Threading.CancellationToken)">
-            <summary>
-            Gets the users that are watching the issue.
-            </summary>
-            <param name="token">Cancellation token for this operation.</param>
-        </member>
         <member name="M:Atlassian.Jira.IUserResource.Get(System.String)">
             <summary>
             Get a known user
@@ -1905,6 +1720,11 @@
         <member name="P:Atlassian.Jira.ProjectVersionCreationInfo.ReleaseDate">
             <summary>
             The release date, null if the version has not been released yet.
+            </summary>
+        </member>
+        <member name="P:Atlassian.Jira.ProjectVersionCreationInfo.StartDate">
+            <summary>
+            The start date, null if version has not been started yet.
             </summary>
         </member>
         <member name="T:Atlassian.Jira.IssueStatus">
@@ -2091,19 +1911,6 @@
             <param name="fieldName">Name of the custom field as defined in JIRA</param>
             <returns>CustomField instance if the field has been set on the issue, null otherwise</returns>
         </member>
-        <member name="M:Atlassian.Jira.CustomFieldValueCollection.ForEdit">
-            <summary>
-            Changes context of collection to operate against fields for edit.
-            </summary>
-            <returns>Current collection with changed context/</returns>
-        </member>
-        <member name="M:Atlassian.Jira.CustomFieldValueCollection.ForAction(System.String)">
-            <summary>
-            Changes context of collection to operate against fields for action.
-            </summary>
-            <param name="actionId">Id of action as defined in JIRA.</param>
-            <returns>Current collection with changed context/</returns>
-        </member>
         <member name="T:Atlassian.Jira.IssueTimeTrackingData">
             <summary>
             Time tracking information for an issue.
@@ -2287,16 +2094,6 @@
             The URL set on the project.
             </summary>
         </member>
-        <member name="P:Atlassian.Jira.Project.Versions">
-            <summary>
-            Gets an object to interact with the versions of this project.
-            </summary>
-        </member>
-        <member name="P:Atlassian.Jira.Project.Components">
-            <summary>
-            Gets an object to interact with the components of this project.
-            </summary>
-        </member>
         <member name="M:Atlassian.Jira.Project.AddComponentAsync(Atlassian.Jira.ProjectComponentCreationInfo,System.Threading.CancellationToken)">
             <summary>
             Creates a new project component.
@@ -2446,16 +2243,6 @@
             <param name="remoteIssue">The remote issue object.</param>
             <param name="parentIssueKey">If provided, marks this issue as a subtask of the given parent issue.</param>
         </member>
-        <member name="P:Atlassian.Jira.Issue.Labels">
-            <summary>
-            Get an object to interact with the labels of this issue.
-            </summary>
-        </member>
-        <member name="P:Atlassian.Jira.Issue.Watchers">
-            <summary>
-            Get an object to interact with the watchers of this issue.
-            </summary>
-        </member>
         <member name="P:Atlassian.Jira.Issue.ParentIssueKey">
             <summary>
             The parent key if this issue is a subtask.
@@ -2578,6 +2365,11 @@
             The versions in which this issue is fixed
             </summary>
         </member>
+        <member name="P:Atlassian.Jira.Issue.Labels">
+            <summary>
+            The labels assigned to this issue.
+            </summary>
+        </member>
         <member name="P:Atlassian.Jira.Issue.CustomFields">
             <summary>
             The custom fields associated with this issue
@@ -2601,14 +2393,6 @@
             </summary>
             <param name="token">Cancellation token for this operation.</param>
         </member>
-        <member name="M:Atlassian.Jira.Issue.LinkToIssue(System.String,System.String,System.String)">
-            <summary>
-            Creates a link between this issue and the issue specified.
-            </summary>
-            <param name="inwardIssueKey">Key of the issue to link.</param>
-            <param name="linkName">Name of the issue link type.</param>
-            <param name="comment">Comment to add to this issue.</param>
-        </member>
         <member name="M:Atlassian.Jira.Issue.LinkToIssueAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
             <summary>
             Creates a link between this issue and the issue specified.
@@ -2618,22 +2402,11 @@
             <param name="comment">Comment to add to this issue.</param>
             <param name="token">Cancellation token for this operation.</param>
         </member>
-        <member name="M:Atlassian.Jira.Issue.GetIssueLinks">
-            <summary>
-            Gets the issue links associated with this issue.
-            </summary>
-        </member>
         <member name="M:Atlassian.Jira.Issue.GetIssueLinksAsync(System.Threading.CancellationToken)">
             <summary>
             Gets the issue links associated with this issue.
             </summary>
             <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.Issue.WorkflowTransition(System.String)">
-            <summary>
-            Transition an issue through a workflow action.
-            </summary>
-            <param name="actionName">The workflow action to transition to.</param>
         </member>
         <member name="M:Atlassian.Jira.Issue.WorkflowTransitionAsync(System.String,Atlassian.Jira.WorkflowTransitionUpdates,System.Threading.CancellationToken)">
             <summary>
@@ -2643,13 +2416,6 @@
             <param name="additionalUpdates">Additional updates to perform when transitioning the issue.</param>
             <param name="token">Cancellation token for this operation.</param>
         </member>
-        <member name="M:Atlassian.Jira.Issue.GetSubTasks(System.Nullable{System.Int32},System.Int32)">
-            <summary>
-            Returns the issues that are marked as sub tasks of this issue.
-            </summary>
-            <param name="maxIssues">Maximum number of issues to retrieve.</param>
-            <param name="startAt">Index of the first issue to return (0-based).</param>
-        </member>
         <member name="M:Atlassian.Jira.Issue.GetSubTasksAsync(System.Nullable{System.Int32},System.Int32,System.Threading.CancellationToken)">
             <summary>
             Returns the issues that are marked as sub tasks of this issue.
@@ -2657,11 +2423,6 @@
             <param name="maxIssues">Maximum number of issues to retrieve.</param>
             <param name="startAt">Index of the first issue to return (0-based).</param>
             <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.Issue.GetAttachments">
-            <summary>
-            Retrieve attachment metadata from server for this issue
-            </summary>
         </member>
         <member name="M:Atlassian.Jira.Issue.GetAttachmentsAsync(System.Threading.CancellationToken)">
             <summary>
@@ -2706,21 +2467,11 @@
             Gets a dictionary with issue field names as keys and their metadata as values.
             </summary>
         </member>
-        <member name="M:Atlassian.Jira.Issue.GetChangeLogs">
-            <summary>
-            Retrieve change logs from server for this issue.
-            </summary>
-        </member>
         <member name="M:Atlassian.Jira.Issue.GetChangeLogsAsync(System.Threading.CancellationToken)">
             <summary>
             Retrieve change logs from server for this issue.
             </summary>
             <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.Issue.GetComments">
-            <summary>
-            Retrieve comments from server for this issue
-            </summary>
         </member>
         <member name="M:Atlassian.Jira.Issue.GetCommentsAsync(System.Threading.CancellationToken)">
             <summary>
@@ -2735,18 +2486,6 @@
             <param name="maxComments">Maximum number of comments to retrieve.</param>
             <param name="startAt">Index of the first comment to return (0-based).</param>
             <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.Issue.AddComment(System.String)">
-            <summary>
-            Add a comment to this issue.
-            </summary>
-            <param name="comment">Comment text to add.</param>
-        </member>
-        <member name="M:Atlassian.Jira.Issue.AddComment(Atlassian.Jira.Comment)">
-            <summary>
-            Add a comment to this issue.
-            </summary>
-            <param name="comment">Comment object to add.</param>
         </member>
         <member name="M:Atlassian.Jira.Issue.AddCommentAsync(System.String,System.Threading.CancellationToken)">
             <summary>
@@ -2767,12 +2506,6 @@
             </summary>
             <param name="token">Cancellation token for this operation.</param>
         </member>
-        <member name="M:Atlassian.Jira.Issue.AddLabels(System.String[])">
-            <summary>
-            Add labels to this issue
-            </summary>
-            <param name="labels">Label(s) to add</param>
-        </member>
         <member name="M:Atlassian.Jira.Issue.SetLabelsAsync(System.String[])">
             <summary>
             Sets the labels of this issue.
@@ -2785,24 +2518,6 @@
             </summary>
             <param name="labels">The list of labels to set on the issue</param>
             <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.Issue.AddWorklog(System.String,Atlassian.Jira.WorklogStrategy,System.String)">
-            <summary>
-             Adds a worklog to this issue.
-            </summary>
-            <param name="timespent">Specifies a time duration in JIRA duration format, representing the time spent working on the worklog</param>
-            <param name="worklogStrategy">How to handle the remaining estimate, defaults to AutoAdjustRemainingEstimate</param>
-            <param name="newEstimate">New estimate (only used if worklogStrategy set to NewRemainingEstimate)</param>
-            <returns>Worklog as constructed by server</returns>
-        </member>
-        <member name="M:Atlassian.Jira.Issue.AddWorklog(Atlassian.Jira.Worklog,Atlassian.Jira.WorklogStrategy,System.String)">
-            <summary>
-             Adds a worklog to this issue.
-            </summary>
-            <param name="worklog">The worklog instance to add</param>
-            <param name="worklogStrategy">How to handle the remaining estimate, defaults to AutoAdjustRemainingEstimate</param>
-            <param name="newEstimate">New estimate (only used if worklogStrategy set to NewRemainingEstimate)</param>
-            <returns>Worklog as constructed by server</returns>
         </member>
         <member name="M:Atlassian.Jira.Issue.AddWorklogAsync(System.String,Atlassian.Jira.WorklogStrategy,System.String,System.Threading.CancellationToken)">
             <summary>
@@ -2823,11 +2538,6 @@
             <param name="token">Cancellation token for this operation.</param>
             <returns>Worklog as constructed by server</returns>
         </member>
-        <member name="M:Atlassian.Jira.Issue.DeleteWorklog(Atlassian.Jira.Worklog,Atlassian.Jira.WorklogStrategy,System.String)">
-            <summary>
-            Deletes the worklog with the given id and updates the remaining estimate field on the isssue
-            </summary>
-        </member>
         <member name="M:Atlassian.Jira.Issue.DeleteWorklogAsync(Atlassian.Jira.Worklog,Atlassian.Jira.WorklogStrategy,System.String,System.Threading.CancellationToken)">
             <summary>
             Deletes the given worklog from the issue and updates the remaining estimate field.
@@ -2837,22 +2547,11 @@
             <param name="newEstimate">New estimate (only used if worklogStrategy set to NewRemainingEstimate)</param>
             <param name="token">Cancellation token for this operation.</param>
         </member>
-        <member name="M:Atlassian.Jira.Issue.GetWorklogs">
-            <summary>
-            Retrieve worklogs for current issue
-            </summary>
-        </member>
         <member name="M:Atlassian.Jira.Issue.GetWorklogsAsync(System.Threading.CancellationToken)">
             <summary>
             Retrieve worklogs for this issue.
             </summary>
             <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.Issue.GetResolutionDate">
-            <summary>
-            Retrieve the resolution date for this issue.
-            </summary>
-            <returns>Resultion date for this issue, null if it hasn't been resolved.</returns>
         </member>
         <member name="M:Atlassian.Jira.Issue.Refresh">
             <summary>
@@ -2865,22 +2564,11 @@
             </summary>
             <param name="token">Cancellation token for this operation.</param>
         </member>
-        <member name="M:Atlassian.Jira.Issue.GetAvailableActions">
-            <summary>
-            Gets the workflow actions that the issue can be transitioned to.
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:Atlassian.Jira.Issue.GetAvailableActionsAsync(System.Threading.CancellationToken)">
             <summary>
             Gets the workflow actions that the issue can be transitioned to.
             </summary>
             <param name="token">Cancellation token for this operation.</param>
-        </member>
-        <member name="M:Atlassian.Jira.Issue.GetTimeTrackingData">
-            <summary>
-            Gets time tracking information for this issue.
-            </summary>
         </member>
         <member name="M:Atlassian.Jira.Issue.GetTimeTrackingDataAsync(System.Threading.CancellationToken)">
             <summary>
@@ -3056,164 +2744,10 @@
             Url to the JIRA server
             </summary>
         </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssue(System.String)">
-            <summary>
-            Gets an issue from the JIRA server
-            </summary>
-            <param name="key">The key of the issue</param>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssuesFromFilter(System.String,System.Int32,System.Nullable{System.Int32})">
-            <summary>
-            Returns issues that match the specified filter
-            </summary>
-            <param name="filterName">The name of the filter used for the search</param>
-            <param name="start">The place in the result set to use as the first issue returned</param>
-            <param name="maxResults">The maximum number of issues to return</param>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssuesFromJql(System.String)">
-            <summary>
-            Execute a specific JQL query and return the resulting issues
-            </summary>
-            <param name="jql">JQL search query</param>
-            <returns>Collection of Issues that match the search query</returns>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssuesFromJql(System.String,System.Nullable{System.Int32},System.Int32)">
-            <summary>
-            Execute a specific JQL query and return the resulting issues
-            </summary>
-            <param name="jql">JQL search query</param>
-            <param name="maxIssues">Maximum number of issues to return (defaults to 50). The maximum allowable value is dictated by the JIRA property 'jira.search.views.default.max'. If you specify a value that is higher than this number, your search results will be truncated.</param>
-            <param name="startAt">Index of the first issue to return (0-based)</param>
-            <returns>Collection of Issues that match the search query</returns>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssuesFromJqlAsync(System.String,System.Nullable{System.Int32},System.Int32,System.Threading.CancellationToken)">
-            <summary>
-            Execute a specific JQL query and return the resulting issues.
-            </summary>
-            <param name="jql">JQL search query</param>
-            <param name="maxIssues">Maximum number of issues to return (defaults to 50). The maximum allowable value is dictated by the JIRA property 'jira.search.views.default.max'. If you specify a value that is higher than this number, your search results will be truncated.</param>
-            <param name="startAt">Index of the first issue to return (0-based)</param>
-            <param name="token">Cancellation token for this operation.</param>
-        </member>
         <member name="M:Atlassian.Jira.Jira.CreateIssue(System.String,System.String)">
             <summary>
             Returns a new issue that when saved will be created on the remote JIRA server
             </summary>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.DeleteIssue(Atlassian.Jira.Issue)">
-            <summary>
-            Deletes the issue specified from the JIRA server.
-            </summary>
-            <param name="issue">Issue to delete.</param>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetSubTaskIssueTypes">
-            <summary>
-            Returns all the sub-tasks issue types within JIRA.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssueTypes(System.String)">
-            <summary>
-            Returns all the issue types within JIRA
-            </summary>
-            <param name="projectKey">If provided, returns issue types only for given project</param>
-            <returns>Collection of JIRA issue types</returns>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssueTypesAsync(System.Threading.CancellationToken)">
-            <summary>
-            Returns all the issue types within JIRA.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetProjectVersions(System.String)">
-            <summary>
-            Returns all versions defined on a JIRA project
-            </summary>
-            <param name="projectKey">The project to retrieve the versions from</param>
-            <returns>Collection of JIRA versions.</returns>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetProjectComponents(System.String)">
-            <summary>
-            Returns all components defined on a JIRA project.
-            </summary>
-            <param name="projectKey">The project to retrieve the components from.</param>
-            <returns>Collection of JIRA components</returns>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssuePriorities">
-            <summary>
-            Returns all the issue priorities within JIRA
-            </summary>
-            <returns>Collection of JIRA issue priorities</returns>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssuePrioritiesAsync(System.Threading.CancellationToken)">
-            <summary>
-            Returns all the issue priorities within JIRA.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssueLinkTypes">
-            <summary>
-            Returns all available issue link types.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssueLinkTypesAsync(System.Threading.CancellationToken)">
-            <summary>
-            Returns all available issue link types.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssueStatuses">
-            <summary>
-            Returns all the issue statuses within JIRA
-            </summary>
-            <returns>Collection of JIRA issue statuses</returns>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssueStatusesAsync(System.Threading.CancellationToken)">
-            <summary>
-            Returns all the issue statuses within JIRA.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssueResolutions">
-            <summary>
-            Returns all the issue resolutions within JIRA
-            </summary>
-            <returns>Collection of JIRA issue resolutions</returns>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetIssueResolutionsAsync(System.Threading.CancellationToken)">
-            <summary>
-            Returns all the issue resolutions within JIRA
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetCustomFields">
-            <summary>
-            Returns all custom fields within JIRA
-            </summary>
-            <returns>Collection of JIRA custom fields</returns>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetCustomFieldsAsync(System.Threading.CancellationToken)">
-            <summary>
-            Returns all custom fields within JIRA.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetFilters">
-            <summary>
-            Returns the favourite filters for the user
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetProjects">
-            <summary>
-            Returns all projects defined in JIRA.
-            </summary>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetUserAsync(System.String,System.Threading.CancellationToken)">
-            <summary>
-            Returns user by username.
-            </summary>
-            <param name="userName">The username of the user to get.</param>
-            <param name="token">Cancelation token for this operation.</param>
-            <exception cref="T:System.ArgumentException">ArgumentException is thrown if passed username is null or empty string.</exception>
-        </member>
-        <member name="M:Atlassian.Jira.Jira.GetProjectsAsync(System.Threading.CancellationToken)">
-            <summary>
-            Returns all projects defined in JIRA.
-            </summary>
-            <param name="token">Cancellation token for this operation.</param>
         </member>
         <member name="T:Atlassian.Jira.JiraNamedConstant">
             <summary>
@@ -3326,6 +2860,11 @@
         <member name="P:Atlassian.Jira.ProjectVersion.IsReleased">
             <summary>
             Whether this version has been released
+            </summary>
+        </member>
+        <member name="P:Atlassian.Jira.ProjectVersion.StartDate">
+            <summary>
+            The start date for this version
             </summary>
         </member>
         <member name="P:Atlassian.Jira.ProjectVersion.ReleasedDate">

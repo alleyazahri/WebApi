@@ -13,7 +13,7 @@ namespace JiraApi
             JiraConnection = Jira.CreateRestClient(url, username, password);
             try
             {
-                var jiraUser = JiraConnection.Issues.Where(x => x.Key == "XWESVC-955");
+                var jiraUser = JiraConnection.Issues.Queryable.FirstOrDefault(x => x.Key == "XWESVC-955");
                 return true;
             }
             catch (Exception)
