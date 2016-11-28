@@ -59,6 +59,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddRemoveProjects.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddRemoveProjects.Designer.cs">
+      <DependentUpon>AddRemoveProjects.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\CompoundIssue.cs" />
     <Compile Include="Data\IssueExtension.cs" />
     <Compile Include="Data\JiraIssue.cs" />
@@ -86,6 +92,9 @@
     <Compile Include="MainWindowBusi\TaskBusi.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AddRemoveProjects.resx">
+      <DependentUpon>AddRemoveProjects.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LinkTasks.resx">
       <DependentUpon>LinkTasks.cs</DependentUpon>
     </EmbeddedResource>

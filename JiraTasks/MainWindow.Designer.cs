@@ -35,7 +35,6 @@
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.projectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.xWESVCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savedFiltersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCurrentFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,7 +74,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1344, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(1344, 28);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -85,14 +84,14 @@
             this.loginToolStripMenuItem,
             this.logoutToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(50, 29);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
             this.fileToolStripMenuItem.Text = "&File";
             // 
             // loginToolStripMenuItem
             // 
             this.loginToolStripMenuItem.Name = "loginToolStripMenuItem";
             this.loginToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.L)));
-            this.loginToolStripMenuItem.Size = new System.Drawing.Size(214, 30);
+            this.loginToolStripMenuItem.Size = new System.Drawing.Size(180, 26);
             this.loginToolStripMenuItem.Text = "&Login";
             this.loginToolStripMenuItem.Click += new System.EventHandler(this.loginToolStripMenuItem_Click);
             // 
@@ -100,7 +99,7 @@
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
             this.logoutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(214, 30);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(180, 26);
             this.logoutToolStripMenuItem.Text = "L&ogout";
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
             // 
@@ -109,30 +108,21 @@
             this.filterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.projectsToolStripMenuItem});
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            this.filterToolStripMenuItem.Size = new System.Drawing.Size(62, 29);
+            this.filterToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
             this.filterToolStripMenuItem.Text = "Filter";
             // 
             // projectsToolStripMenuItem
             // 
             this.projectsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.xWESVCToolStripMenuItem,
             this.addProjectToolStripMenuItem});
             this.projectsToolStripMenuItem.Name = "projectsToolStripMenuItem";
-            this.projectsToolStripMenuItem.Size = new System.Drawing.Size(159, 30);
+            this.projectsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.projectsToolStripMenuItem.Text = "Projects";
-            // 
-            // xWESVCToolStripMenuItem
-            // 
-            this.xWESVCToolStripMenuItem.Checked = true;
-            this.xWESVCToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.xWESVCToolStripMenuItem.Name = "xWESVCToolStripMenuItem";
-            this.xWESVCToolStripMenuItem.Size = new System.Drawing.Size(261, 30);
-            this.xWESVCToolStripMenuItem.Text = "XWESVC";
             // 
             // addProjectToolStripMenuItem
             // 
             this.addProjectToolStripMenuItem.Name = "addProjectToolStripMenuItem";
-            this.addProjectToolStripMenuItem.Size = new System.Drawing.Size(261, 30);
+            this.addProjectToolStripMenuItem.Size = new System.Drawing.Size(222, 26);
             this.addProjectToolStripMenuItem.Text = "Add/Remove Project";
             this.addProjectToolStripMenuItem.Click += new System.EventHandler(this.addProjectToolStripMenuItem_Click);
             // 
@@ -141,13 +131,13 @@
             this.savedFiltersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveCurrentFilterToolStripMenuItem});
             this.savedFiltersToolStripMenuItem.Name = "savedFiltersToolStripMenuItem";
-            this.savedFiltersToolStripMenuItem.Size = new System.Drawing.Size(123, 29);
+            this.savedFiltersToolStripMenuItem.Size = new System.Drawing.Size(104, 24);
             this.savedFiltersToolStripMenuItem.Text = "Saved Filters";
             // 
             // saveCurrentFilterToolStripMenuItem
             // 
             this.saveCurrentFilterToolStripMenuItem.Name = "saveCurrentFilterToolStripMenuItem";
-            this.saveCurrentFilterToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+            this.saveCurrentFilterToolStripMenuItem.Size = new System.Drawing.Size(214, 26);
             this.saveCurrentFilterToolStripMenuItem.Text = "+Save Current Filter";
             // 
             // tasksToolStripMenuItem
@@ -156,20 +146,20 @@
             this.linkTaskToolStripMenuItem,
             this.unlinkTaskToolStripMenuItem});
             this.tasksToolStripMenuItem.Name = "tasksToolStripMenuItem";
-            this.tasksToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
+            this.tasksToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
             this.tasksToolStripMenuItem.Text = "Tasks";
             // 
             // linkTaskToolStripMenuItem
             // 
             this.linkTaskToolStripMenuItem.Name = "linkTaskToolStripMenuItem";
-            this.linkTaskToolStripMenuItem.Size = new System.Drawing.Size(184, 30);
+            this.linkTaskToolStripMenuItem.Size = new System.Drawing.Size(156, 26);
             this.linkTaskToolStripMenuItem.Text = "Link Task";
             this.linkTaskToolStripMenuItem.Click += new System.EventHandler(this.linkTaskToolStripMenuItem_Click);
             // 
             // unlinkTaskToolStripMenuItem
             // 
             this.unlinkTaskToolStripMenuItem.Name = "unlinkTaskToolStripMenuItem";
-            this.unlinkTaskToolStripMenuItem.Size = new System.Drawing.Size(184, 30);
+            this.unlinkTaskToolStripMenuItem.Size = new System.Drawing.Size(156, 26);
             this.unlinkTaskToolStripMenuItem.Text = "Unlink Task";
             // 
             // pLoginToViewTasks
@@ -188,7 +178,7 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(196, 11);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(326, 29);
+            this.label1.Size = new System.Drawing.Size(267, 25);
             this.label1.TabIndex = 0;
             this.label1.Text = "Please Log In To View Tasks";
             // 
@@ -227,7 +217,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolStripMenuItem filterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem projectsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem xWESVCToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addProjectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem savedFiltersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveCurrentFilterToolStripMenuItem;
