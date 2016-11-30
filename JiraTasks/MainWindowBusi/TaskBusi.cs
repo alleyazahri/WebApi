@@ -51,5 +51,14 @@ namespace JiraTasks.MainWindowBusi
             Console.WriteLine(maintask);
             //throw new NotImplementedException();
         }
+
+        public List<Issue> RemoveIrrelevantTasks(List<Issue> tasks, List<string> irrelevantTasks)
+        {
+            foreach (var irrelevantTask in irrelevantTasks)
+            {
+                tasks.RemoveAll(x => x.Key.Value == irrelevantTask);
+            }
+            return tasks;
+        }
     }
 }

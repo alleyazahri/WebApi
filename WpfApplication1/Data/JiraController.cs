@@ -133,16 +133,17 @@ namespace WpfApplication1.Data
                     break;
 
                 case "Closed":
-                    status = "5 - Closed";
+                    status = "6 - Closed";
                     break;
 
                 case "Reopened":
                 case "Approved":
                 case "Open":
+                    status = $"5 - {issueStatus.Name}";
                     break;
 
                 case "Archived":
-                    status = "ARCHIVED";
+                    status = "7 - Archived";
                     break;
 
                 default:
