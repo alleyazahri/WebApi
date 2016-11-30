@@ -10,22 +10,50 @@ namespace JiraTasks.Data
         public object[] ToStringArray()
         {
             string status = GetIssueSummaryEquivalent(DevTask.Status.Name);
-            return new object[] { DevTask.Key.Value, LinkedTask?.Key?.Value ?? "", status, DevTask.Summary, DevTask.Description };
+            return new object[] { DevTask.Key.Value, LinkedTask?.Key?.Value ?? "", status, DevTask.Summary, DevTask.Description?.Substring(0, DevTask.Description.Length > 300 ? 300 : DevTask.Description.Length) };
         }
 
-        private static string GetIssueSummaryEquivalent(string issueSummary)
+        public static string GetIssueSummaryEquivalent(string issueSummary)
         {
-            if (issueSummary == "Functional Testing" || issueSummary == "Integration Testing")
-                return "2 - Test";
-            if (issueSummary == "Acceptance Testing")
-                return "1 - Beta";
-            if (issueSummary == "Code Review")
-                return $"3 - {issueSummary}";
-            if (issueSummary == "In Progress")
-                return $"4 - {issueSummary}";
-            if (issueSummary == "Closed")
-                return $"5 - {issueSummary}";
-            return issueSummary;
+            string status;
+            switch (issueSummary)
+            {
+                case "Acceptance Testing":
+                    status = "1 - Beta";
+                    break;
+
+                case "Integration Testing":
+                case "Functional Testing":
+                    status = "2 - Test";
+                    break;
+
+                case "Code Review":
+                    status = "3 - Code Review";
+                    break;
+
+                case "In Progress":
+                    status = "4 - In Progress";
+                    break;
+
+                case "Closed":
+                    status = "6 - Closed";
+                    break;
+
+                case "Reopened":
+                case "Approved":
+                case "Open":
+                    status = $"5 - {issueSummary}";
+                    break;
+
+                case "Archived":
+                    status = "7 - Archived";
+                    break;
+
+                default:
+                    status = $"0 - Unknown Status: {issueSummary}";
+                    break;
+            }
+            return status;
         }
     }
 }
