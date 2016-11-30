@@ -65,10 +65,18 @@
     <Compile Include="AddRemoveProjects.Designer.cs">
       <DependentUpon>AddRemoveProjects.cs</DependentUpon>
     </Compile>
+    <Compile Include="ColorKeyWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ColorKeyWindow.Designer.cs">
+      <DependentUpon>ColorKeyWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\ColorKey.cs" />
     <Compile Include="Data\CompoundIssue.cs" />
     <Compile Include="Data\IssueExtension.cs" />
     <Compile Include="Data\JiraIssue.cs" />
     <Compile Include="Data\LoginSettingsDocument.cs" />
+    <Compile Include="Data\RowColumn.cs" />
     <Compile Include="Data\UserPrefs.cs" />
     <Compile Include="LinkTasks.cs">
       <SubType>Form</SubType>
@@ -94,6 +102,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AddRemoveProjects.resx">
       <DependentUpon>AddRemoveProjects.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ColorKeyWindow.resx">
+      <DependentUpon>ColorKeyWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LinkTasks.resx">
       <DependentUpon>LinkTasks.cs</DependentUpon>
