@@ -7,15 +7,21 @@ namespace JiraTasks.Data
 {
     public class UserPrefs
     {
-        private string Path { get; set; }
-        private string Filename { get; set; }
+        private string Path { get; }
+        private string Filename { get; }
+        public List<ProjectMenuItem> Projects { get; set; }
+        public List<string> IrrelevantTasks { get; set; }
         public Dictionary<string, string> LinkedTaskList { get; set; }
+        public ColorKey ColorLegend { get; set; }
 
         public UserPrefs(string path, string filename)
         {
             Path = path;
             Filename = filename;
             LinkedTaskList = new Dictionary<string, string>();
+            Projects = new List<ProjectMenuItem>();
+            IrrelevantTasks = new List<string>();
+            ColorLegend = new ColorKey();
         }
 
         public bool Load()
@@ -31,6 +37,8 @@ namespace JiraTasks.Data
                 var fileText = File.ReadAllText($@"{Path}/{Filename}");
                 var deserialized = JsonConvert.DeserializeObject<UserPrefs>(fileText);
                 LinkedTaskList = deserialized.LinkedTaskList;
+                Projects = deserialized.Projects;
+                IrrelevantTasks = deserialized.IrrelevantTasks;
                 return true;
             }
             catch (Exception)
@@ -48,5 +56,11 @@ namespace JiraTasks.Data
             string serialized = JsonConvert.SerializeObject(this);
             File.WriteAllText($@"{Path}/{Filename}", serialized);
         }
+    }
+
+    public class ProjectMenuItem
+    {
+        public string ProjectName { get; set; }
+        public bool ProjectIsSelected { get; set; }
     }
 }

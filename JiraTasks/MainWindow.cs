@@ -17,6 +17,8 @@ namespace JiraTasks
         private List<CompoundIssue> IssueList { get; set; }
         private UserPrefs UserPreferences { get; set; }
         private TaskBusi TaskBusi { get; set; }
+        private AddRemoveProjects AddRemoveProjectsWindow { get; set; }
+        private RowColumn CurrentRowColumn { get; set; }
 
         /// <summary>
         /// Initializes the TaskList window
@@ -26,6 +28,7 @@ namespace JiraTasks
             InitializeComponent();
             LoginWindow = new Login();
             IssueList = new List<CompoundIssue>();
+            CurrentRowColumn = new RowColumn();
             UserPreferences = new UserPrefs(LoginWindow.SettingsPath, "UPJTFO23.settings");
             UserPreferences.Load();
             TaskBusi = new TaskBusi(LoginWindow.LogCont);
@@ -77,7 +80,7 @@ namespace JiraTasks
 
         private void addProjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not yet implemented!");
+            AddAndRemoveProjects();
         }
 
         private void TaskList_FormClosing(object sender, FormClosingEventArgs e)
@@ -94,13 +97,15 @@ namespace JiraTasks
         private void dgvtaskContextMenu_RemoveLink(object sender, EventArgs e)
         {
             MessageBox.Show("Not Yet Implemented!");
+            dgJiraTaskList.ContextMenuStrip = null;
             //TODO: Cast e and see if that gives me what I want
             //TaskBusi.RemoveLink("MainTask", "LinkedTask");
         }
 
         private void dgvtaskContextMenu_AddLink(object sender, EventArgs e)
         {
-            MessageBox.Show("Not Yet Implemented!");
+            MessageBox.Show($"Not Yet Implemented! {CurrentRowColumn.Row} {CurrentRowColumn.Column}");
+            dgJiraTaskList.ContextMenuStrip = null;
             //TODO: Cast e and see if that gives me what I want
             //TaskBusi.RemoveLink("MainTask", "LinkedTask");
         }
@@ -108,6 +113,28 @@ namespace JiraTasks
         private void dvgTaskContextMenu_LogWork(object sender, EventArgs e)
         {
             MessageBox.Show("Not Yet Implemented!");
+            dgJiraTaskList.ContextMenuStrip = null;
+        }
+
+        private void dvgTaskContextMenu_MarkIrrelevant(object sender, EventArgs e)
+        {
+            var currentCell = dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[0];
+            if (currentCell.Style.BackColor == UserPreferences.ColorLegend.IrrelevantTasks)
+            {
+                //Change cell color back by getting the task, and it's status, then coloring
+                UserPreferences.IrrelevantTasks.RemoveAll(x => x == currentCell.Value.ToString());
+            }
+            else
+            {
+                for (int i = 0; i < dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells.Count; i++)
+                {
+                    ColorDataGridViewCell(CurrentRowColumn.Row, i, UserPreferences.ColorLegend.IrrelevantTasks);
+                }
+                UserPreferences.IrrelevantTasks.Add(currentCell.Value.ToString());
+                dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[2].Value =
+                    $"7 - {dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[2].Value}";
+            }
+            dgJiraTaskList.ContextMenuStrip = null;
         }
 
         #endregion Events
@@ -116,20 +143,8 @@ namespace JiraTasks
 
         private void LoadDataGridViewContextMenu()
         {
-            ContextMenuStrip mnu = new ContextMenuStrip();
-            ToolStripMenuItem mnuLogWork = new ToolStripMenuItem("Log Work");
-            ToolStripMenuItem mnuAddLink = new ToolStripMenuItem("Add Link");
-            ToolStripMenuItem mnuRemoveLink = new ToolStripMenuItem("Remove Link");
-            //Assign event handlers
-            mnuRemoveLink.Click += dgvtaskContextMenu_RemoveLink;
-            mnuAddLink.Click += dgvtaskContextMenu_AddLink;
-            mnuLogWork.Click += dvgTaskContextMenu_LogWork;
-
-            //Add to main context menu
-            mnu.Items.AddRange(new ToolStripItem[] { mnuLogWork, mnuAddLink, mnuRemoveLink });
-
             //Assign to datagridview
-            dgJiraTaskList.ContextMenuStrip = mnu;
+            //dgJiraTaskList.ContextMenuStrip = mnu;
         }
 
         private async void LoadDataGridView()
@@ -139,12 +154,13 @@ namespace JiraTasks
             dgJiraTaskList.Columns.Add("Status", "Status");
             dgJiraTaskList.Columns.Add("TaskName", "Summary");
             dgJiraTaskList.Columns.Add("TaskDescription", "Description");
+            dgJiraTaskList.Columns.Add("Notes", "Notes");
 
             dgJiraTaskList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dgJiraTaskList.Columns[3].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgJiraTaskList.Columns[3].Width = (int)((this.Width - 60) * .2);
+            dgJiraTaskList.Columns[3].Width = (int)((Width - 30) * .2);
             dgJiraTaskList.Columns[4].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgJiraTaskList.Columns[4].Width = (int)((this.Width - 60) * .4);
+            dgJiraTaskList.Columns[4].Width = (int)((Width - 30) * .4);
 
             dgJiraTaskList.AllowUserToAddRows = false;
             dgJiraTaskList.AllowUserToOrderColumns = true;
@@ -159,11 +175,10 @@ namespace JiraTasks
             Tasks = task.Result;
             if (UserPreferences.LinkedTaskList == null || UserPreferences.LinkedTaskList.Count == 0)
             {
-                for (int i = 0; i < IssueList.Count; i++)
+                for (int i = 0; i < Tasks.Count; i++)
                 {
-                    dgJiraTaskList.Rows.Add(IssueList[i].ToStringArray());
-                    ColorDataGridViewCell(i, 0, IssueList[i].DevTask.Status.Name);
-                    ColorDataGridViewCell(i, 1, IssueList[i].LinkedTask?.Status?.Name);
+                    dgJiraTaskList.Rows.Add(Tasks[i].ToStringArray());
+                    ColorDataGridViewCell(i, 0, Tasks[i]);
                 }
             }
             else
@@ -172,8 +187,8 @@ namespace JiraTasks
                 for (int i = 0; i < IssueList.Count; i++)
                 {
                     dgJiraTaskList.Rows.Add(IssueList[i].ToStringArray());
-                    ColorDataGridViewCell(i, 0, IssueList[i].DevTask.Status.Name);
-                    ColorDataGridViewCell(i, 1, IssueList[i].LinkedTask?.Status?.Name);
+                    ColorDataGridViewCell(i, 0, IssueList[i].DevTask);
+                    ColorDataGridViewCell(i, 1, IssueList[i].LinkedTask);
                 }
             }
         }
@@ -200,13 +215,21 @@ namespace JiraTasks
         /// <param name="row"></param>
         /// <param name="column"></param>
         /// <param name="statusName"></param>
-        internal void ColorDataGridViewCell(int row, int column, string statusName)
+        internal void ColorDataGridViewCell(int row, int column, Issue issue)
         {
-            if (string.IsNullOrEmpty(statusName))
+            if (issue == null)
             {
                 return;
             }
-            switch (statusName)
+            if (UserPreferences.IrrelevantTasks.Contains(issue.Key.Value))
+            {
+                for (int i = 0; i < dgJiraTaskList.Rows[row].Cells.Count; i++)
+                {
+                    dgJiraTaskList.Rows[row].Cells[i].Style.BackColor = UserPreferences.ColorLegend.IrrelevantTasks;
+                }
+                dgJiraTaskList.Rows[row].Cells[2].Value = "7 - " + dgJiraTaskList.Rows[row].Cells[2].Value;
+            }
+            switch (issue.Status.Name)
             {
                 case "Integration Testing":
                 case "Functional Testing":
@@ -224,6 +247,17 @@ namespace JiraTasks
                     dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = Color.Crimson;
                     break;
             }
+        }
+
+        /// <summary>
+        /// Colors the datagrid view cell based on the given color
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="column"></param>
+        /// <param name="color"></param>
+        internal void ColorDataGridViewCell(int row, int column, Color color)
+        {
+            dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = color;
         }
 
         internal bool CreateLinkBetweenTasks(string mainTask, string linkedTask)
@@ -247,7 +281,7 @@ namespace JiraTasks
                         var issue = TaskBusi.TaskController.GetIssue(linkedTask);
                         dgJiraTaskList.Rows[i].Cells[1].Value = linkedTask;
                         UserPreferences.LinkedTaskList[mainTask.ToUpper()] = linkedTask.ToUpper();
-                        ColorDataGridViewCell(i, 1, issue.Status.Name);
+                        ColorDataGridViewCell(i, 1, issue);
                     }
                     catch (Exception)
                     {
@@ -259,10 +293,13 @@ namespace JiraTasks
                     dgJiraTaskList.Rows.RemoveAt(i);
                 }
             }
+            UserPreferences.Save();
             return true;
         }
 
         #endregion Data Grid View Logic
+
+        #region Login/Logout Logic
 
         private void Logout()
         {
@@ -273,11 +310,75 @@ namespace JiraTasks
             pLoginToViewTasks.Visible = true;
         }
 
+        #endregion Login/Logout Logic
+
+        #region Create Link Window Logic
+
         private void CreateLinkWindowCreation(string task = null)
         {
             var linkTasksWindow = task != null ? new LinkTasks(task) : new LinkTasks();
             linkTasksWindow.ShowDialog();
             CreateLinkBetweenTasks(linkTasksWindow.MainTask, linkTasksWindow.LinkedTask);
+        }
+
+        #endregion Create Link Window Logic
+
+        #region Add/Remove Project Window Logic
+
+        private void AddAndRemoveProjects()
+        {
+            AddRemoveProjectsWindow = new AddRemoveProjects(UserPreferences.Projects);
+            AddRemoveProjectsWindow.ShowDialog();
+        }
+
+        #endregion Add/Remove Project Window Logic
+
+        private void dgJiraTaskList_ColumnSortModeChanged(object sender, DataGridViewColumnEventArgs e)
+        {
+            var asdf = dgJiraTaskList.SortOrder;
+            var fdsa = dgJiraTaskList.SortedColumn;
+        }
+
+        private void dgJiraTaskList_Sorted(object sender, EventArgs e)
+        {
+            var asdf = dgJiraTaskList.SortOrder;
+            var fdsa = dgJiraTaskList.SortedColumn;
+        }
+
+        private void dgJiraTaskList_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right && e.RowIndex > -1 && e.ColumnIndex > -1)
+            {
+                ContextMenuStrip mnu = new ContextMenuStrip();
+                ToolStripMenuItem mnuLogWork = new ToolStripMenuItem("Log Work");
+                ToolStripMenuItem mnuAddLink = new ToolStripMenuItem("Add Link");
+                ToolStripMenuItem mnuRemoveLink = new ToolStripMenuItem("Remove Link");
+                ToolStripMenuItem mnuMarkIrrelevant = new ToolStripMenuItem("Mark Irrelevant");
+                //Assign event handlers
+                mnuRemoveLink.Click += dgvtaskContextMenu_RemoveLink;
+                mnuAddLink.Click += dgvtaskContextMenu_AddLink;
+                mnuLogWork.Click += dvgTaskContextMenu_LogWork;
+                mnuMarkIrrelevant.Click += dvgTaskContextMenu_MarkIrrelevant;
+
+                CurrentRowColumn.Row = e.RowIndex;
+                CurrentRowColumn.Column = e.ColumnIndex;
+
+                //Add to main context menu
+                mnu.Items.AddRange(new ToolStripItem[] { mnuMarkIrrelevant, mnuLogWork, mnuAddLink, mnuRemoveLink });
+                //mnu.Show(this,new Point(e.X,e.Y));
+                dgJiraTaskList.ContextMenuStrip = mnu;
+            }
+        }
+
+        private void colorKeyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ColorKeyWindow asdf = new ColorKeyWindow();
+            asdf.ShowDialog();
+        }
+
+        private void dgJiraTaskList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            MessageBox.Show("Will be implementing soon...");
         }
     }
 }

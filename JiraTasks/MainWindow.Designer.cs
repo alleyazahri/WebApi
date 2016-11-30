@@ -41,6 +41,8 @@
             this.tasksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.linkTaskToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unlinkTaskToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.colorKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pLoginToViewTasks = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgJiraTaskList)).BeginInit();
@@ -54,14 +56,18 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgJiraTaskList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgJiraTaskList.Location = new System.Drawing.Point(46, 129);
+            this.dgJiraTaskList.Location = new System.Drawing.Point(12, 57);
             this.dgJiraTaskList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dgJiraTaskList.Name = "dgJiraTaskList";
             this.dgJiraTaskList.RowTemplate.Height = 28;
-            this.dgJiraTaskList.Size = new System.Drawing.Size(1257, 855);
+            this.dgJiraTaskList.Size = new System.Drawing.Size(1320, 943);
             this.dgJiraTaskList.TabIndex = 0;
+            this.dgJiraTaskList.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgJiraTaskList_CellMouseClick);
             this.dgJiraTaskList.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgJiraTaskList_CellMouseDoubleClick);
+            this.dgJiraTaskList.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgJiraTaskList_CellValueChanged);
+            this.dgJiraTaskList.ColumnSortModeChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dgJiraTaskList_ColumnSortModeChanged);
             this.dgJiraTaskList.SelectionChanged += new System.EventHandler(this.dgJiraTaskList_SelectionChanged);
+            this.dgJiraTaskList.Sorted += new System.EventHandler(this.dgJiraTaskList_Sorted);
             // 
             // menuStrip1
             // 
@@ -70,7 +76,8 @@
             this.fileToolStripMenuItem,
             this.filterToolStripMenuItem,
             this.savedFiltersToolStripMenuItem,
-            this.tasksToolStripMenuItem});
+            this.tasksToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
@@ -116,7 +123,7 @@
             this.projectsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addProjectToolStripMenuItem});
             this.projectsToolStripMenuItem.Name = "projectsToolStripMenuItem";
-            this.projectsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.projectsToolStripMenuItem.Size = new System.Drawing.Size(136, 26);
             this.projectsToolStripMenuItem.Text = "Projects";
             // 
             // addProjectToolStripMenuItem
@@ -161,6 +168,21 @@
             this.unlinkTaskToolStripMenuItem.Name = "unlinkTaskToolStripMenuItem";
             this.unlinkTaskToolStripMenuItem.Size = new System.Drawing.Size(156, 26);
             this.unlinkTaskToolStripMenuItem.Text = "Unlink Task";
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.colorKeyToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // colorKeyToolStripMenuItem
+            // 
+            this.colorKeyToolStripMenuItem.Name = "colorKeyToolStripMenuItem";
+            this.colorKeyToolStripMenuItem.Size = new System.Drawing.Size(148, 26);
+            this.colorKeyToolStripMenuItem.Text = "Color Key";
+            this.colorKeyToolStripMenuItem.Click += new System.EventHandler(this.colorKeyToolStripMenuItem_Click);
             // 
             // pLoginToViewTasks
             // 
@@ -223,6 +245,8 @@
         private System.Windows.Forms.ToolStripMenuItem tasksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem linkTaskToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem unlinkTaskToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem colorKeyToolStripMenuItem;
     }
 }
 
