@@ -16,6 +16,7 @@ namespace JiraTasks
         private int Y { get; set; }
         private int InitWidth => Width - 40;
         private int WorkingWidth => Width - 40 - dgvAddRemoveProjects.Columns[0].Width;
+        private string CellValue { get; set; }
 
         public AddRemoveProjects(UserPrefs userPrefs, TaskBusi taskBusi, int left, int top)
         {
@@ -32,52 +33,7 @@ namespace JiraTasks
             LoadDataGridView();
         }
 
-        private void LoadDataGridView()
-        {
-            dgvAddRemoveProjects.Columns.Add("project", "Project");
-            dgvAddRemoveProjects.Columns[0].Width = (int)(InitWidth * .7);
-            DataGridViewButtonColumn deleteProjects = new DataGridViewButtonColumn
-            {
-                Name = "delete_column",
-                Text = "Add/Delete"
-            };
-            dgvAddRemoveProjects.Columns.Add(deleteProjects);
-            dgvAddRemoveProjects.Columns[1].Width = (int)(InitWidth * .3);
-            dgvAddRemoveProjects.RowHeadersVisible = false;
-            dgvAddRemoveProjects.AllowUserToAddRows = false;
-
-            //    DataGridViewButtonColumn uninstallButtonColumn = new DataGridViewButtonColumn();
-            //uninstallButtonColumn.Name = "uninstall_column";
-            //uninstallButtonColumn.Text = "Uninstall";
-            //int columnIndex = 2;
-
-            //            if (dataGridViewSoftware.Columns["uninstall_column"] == null)
-            //            {
-            //                dataGridViewSoftware.Columns.Insert(columnIndex, uninstallButtonColumn);
-            //            }
-            //            Of course you will have to handle the CellClick event of the grid to do anything with the button.
-
-            //            Add this somewhere in your DataGridView Initialization code
-
-            //               dataGridViewSoftware.CellClick += dataGridViewSoftware_CellClick;
-            //        Then create the handler:
-
-            //private void dataGridViewSoftware_CellClick(object sender, DataGridViewCellEventArgs e)
-            //        {
-            //            if (e.ColumnIndex == dataGridViewSoftware.Columns["uninstall_button"].Index)
-            //            {
-            //                //Do Something with your button.
-            //            }
-            //        }
-
-            dgvAddRemoveProjects.AllowUserToOrderColumns = true;
-            dgvAddRemoveProjects.Show();
-            foreach (var project in UserPrefs.Projects)
-            {
-                dgvAddRemoveProjects.Rows.Add(project.ProjectName, "Delete");
-            }
-            dgvAddRemoveProjects.Rows.Add("", "Add");
-        }
+        #region Events
 
         private void bSaveChanges_Click(object sender, System.EventArgs e)
         {
@@ -100,29 +56,7 @@ namespace JiraTasks
 
         private void dgvAddRemoveProjects_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            //Maybe make sure the project is a real project, otherwise remove it. Plus make it all caps
-            var projectName = dgvAddRemoveProjects.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString().ToUpper();
-            if (projectName != null)
-            {
-                dgvAddRemoveProjects.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = projectName;
-                dgvAddRemoveProjects.Rows[e.RowIndex].Cells[1].Value = "Delete";
-                if (ProjectNames.Contains(projectName))
-                {
-                    MessageBox.Show(this, $"Project {projectName} already exists", "", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                    dgvAddRemoveProjects.Rows.Remove(dgvAddRemoveProjects.Rows[e.RowIndex]);
-                    return;
-                }
-                var project = TaskBusi.VerifyProjectExists(projectName);
-                if (!project)
-                {
-                    MessageBox.Show(this, $"Project {projectName} is not a valid project", "", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                    dgvAddRemoveProjects.Rows.Remove(dgvAddRemoveProjects.Rows[e.RowIndex]);
-                    return;
-                }
-                ProjectNames.Add(projectName);
-            }
+            EditProjectInList(e.RowIndex, e.ColumnIndex);
         }
 
         private void AddRemoveProjects_Load(object sender, System.EventArgs e)
@@ -132,16 +66,123 @@ namespace JiraTasks
 
         private void dgvAddRemoveProjects_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            MessageBox.Show($"{e.RowIndex},{e.ColumnIndex}");
-            if (e.ColumnIndex == 1)
+            if (e.ColumnIndex == 1 && e.RowIndex >= 0)
             {
-                DeleteGivenProject(e.RowIndex, e.ColumnIndex);
+                AddDeleteGivenProject(e.RowIndex, e.ColumnIndex);
             }
         }
 
-        private void DeleteGivenProject(int row, int column)
+        private void dgvAddRemoveProjects_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            MessageBox.Show(dgvAddRemoveProjects.Rows[row].Cells[column].Value.ToString());
+            CellValue = dgvAddRemoveProjects.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
+        }
+
+        #endregion Events
+
+        private void LoadDataGridView()
+        {
+            dgvAddRemoveProjects.Columns.Add("project", "Project");
+            dgvAddRemoveProjects.Columns[0].Width = (int)(InitWidth * .7);
+            DataGridViewButtonColumn deleteProjects = new DataGridViewButtonColumn
+            {
+                Name = "addDeleteColumn",
+                HeaderText = "Add/Delete"
+            };
+            dgvAddRemoveProjects.Columns.Add(deleteProjects);
+            dgvAddRemoveProjects.Columns[1].Width = (int)(InitWidth * .3);
+            dgvAddRemoveProjects.RowHeadersVisible = false;
+            dgvAddRemoveProjects.AllowUserToAddRows = false;
+
+            dgvAddRemoveProjects.AllowUserToOrderColumns = true;
+            dgvAddRemoveProjects.Show();
+            foreach (var project in UserPrefs.Projects)
+            {
+                dgvAddRemoveProjects.Rows.Add(project.ProjectName, "Delete");
+            }
+            dgvAddRemoveProjects.Rows.Add("", "Add");
+        }
+
+        private void AddDeleteGivenProject(int row, int column)
+        {
+            var addDelete = dgvAddRemoveProjects.Rows[row].Cells[column].Value.ToString();
+            if (addDelete == "Delete")
+            {
+                DeleteProjectFromList(row, column - 1);
+            }
+            else if (addDelete == "Add")
+            {
+                AddProjectToList(row, column - 1);
+            }
+            else
+            {
+                MessageBox.Show("An error has occurred. If this continues, please contact someone O.o", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void DeleteProjectFromList(int row, int column)
+        {
+            var projectName = dgvAddRemoveProjects.Rows[row].Cells[column].Value?.ToString().ToUpper();
+            ProjectNames.Remove(projectName);
+            dgvAddRemoveProjects.Rows.RemoveAt(row);
+        }
+
+        private void AddProjectToList(int row, int column)
+        {
+            var projectName = dgvAddRemoveProjects.Rows[row].Cells[column].Value?.ToString().ToUpper();
+            if (projectName != null && ProjectIsUsableAndAlertUser(projectName))
+            {
+                dgvAddRemoveProjects.Rows[row].Cells[column].Value = projectName;
+                dgvAddRemoveProjects.Rows[row].Cells[column + 1].Value = "Delete";
+                ProjectNames.Add(projectName);
+                dgvAddRemoveProjects.Rows.Add("", "Add");
+            }
+            else
+            {
+                dgvAddRemoveProjects.Rows[row].Cells[column].Value = "";
+                dgvAddRemoveProjects.Rows[row].Cells[column + 1].Value = "Add";
+            }
+        }
+
+        private void EditProjectInList(int row, int column)
+        {
+            var projectName = dgvAddRemoveProjects.Rows[row].Cells[column].Value?.ToString().ToUpper();
+            if (projectName != null)
+            {
+                dgvAddRemoveProjects.Rows[row].Cells[column].Value = projectName;
+                if (projectName == CellValue)
+                    return;
+                var val = dgvAddRemoveProjects.Rows[row].Cells[column + 1].Value.ToString();
+
+                if (val != "Add" && ProjectIsUsableAndAlertUser(projectName))
+                {
+                    ProjectNames.Add(projectName);
+                    ProjectNames.Remove(CellValue);
+                }
+                else
+                {
+                    dgvAddRemoveProjects.Rows[row].Cells[column].Value = CellValue;
+                }
+            }
+            CellValue = null;
+        }
+
+        private bool ProjectIsUsableAndAlertUser(string projectName)
+        {
+            if (ProjectNames.Contains(projectName))
+            {
+                MessageBox.Show(this, $"Project {projectName} already exists", "", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return false;
+            }
+            var project = TaskBusi.VerifyProjectExists(projectName);
+            if (!project)
+            {
+                MessageBox.Show(this, $"Project {projectName} is not a valid project", "", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
         }
     }
 }
