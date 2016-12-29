@@ -10,5 +10,13 @@ namespace JiraTasks.Data
         {
             IrrelevantTasks = Color.Gray;
         }
+
+        public ColorKey DeepCopy()
+        {
+            return new ColorKey()
+            {
+                IrrelevantTasks = IrrelevantTasks
+            };
+        }
     }
 }
