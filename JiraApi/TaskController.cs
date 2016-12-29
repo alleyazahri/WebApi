@@ -36,6 +36,11 @@ namespace JiraApi
             return Lc.JiraConnection.Issues.Queryable.FirstOrDefault(i => i.Key == issueId.ToUpper());
         }
 
+        public List<Issue> GetIssuesInProject(string projectName, int numIssues)
+        {
+            return Lc.JiraConnection.Issues.Queryable.Where(i => i.Project == projectName).Take(numIssues).ToList();
+        }
+
         private List<Issue> FilterByStatus(TaskFilter filter, List<Issue> tasks)
         {
             if (filter.Statuses == null || filter.Statuses.Count <= 0 || tasks?.Count == 0)
