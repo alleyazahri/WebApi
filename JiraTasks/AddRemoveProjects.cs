@@ -15,7 +15,6 @@ namespace JiraTasks
         private int X { get; set; }
         private int Y { get; set; }
         private int InitWidth => Width - 40;
-        private int WorkingWidth => Width - 40 - dgvAddRemoveProjects.Columns[0].Width;
         private string CellValue { get; set; }
 
         public AddRemoveProjects(UserPrefs userPrefs, TaskBusi taskBusi, int left, int top)
