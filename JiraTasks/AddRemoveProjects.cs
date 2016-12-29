@@ -149,11 +149,11 @@ namespace JiraTasks
             if (projectName != null)
             {
                 dgvAddRemoveProjects.Rows[row].Cells[column].Value = projectName;
-                if (projectName == CellValue)
-                    return;
                 var val = dgvAddRemoveProjects.Rows[row].Cells[column + 1].Value.ToString();
+                if (projectName == CellValue || val == "Add")
+                    return;
 
-                if (val != "Add" && ProjectIsUsableAndAlertUser(projectName))
+                if (ProjectIsUsableAndAlertUser(projectName))
                 {
                     ProjectNames.Add(projectName);
                     ProjectNames.Remove(CellValue);
