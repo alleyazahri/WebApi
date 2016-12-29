@@ -14,6 +14,8 @@ namespace JiraTasks
         private TaskBusi TaskBusi { get; set; }
         private int X { get; set; }
         private int Y { get; set; }
+        private int InitWidth => Width - 40;
+        private int WorkingWidth => Width - 40 - dgvAddRemoveProjects.Columns[0].Width;
 
         public AddRemoveProjects(UserPrefs userPrefs, TaskBusi taskBusi, int left, int top)
         {
@@ -33,9 +35,16 @@ namespace JiraTasks
         private void LoadDataGridView()
         {
             dgvAddRemoveProjects.Columns.Add("project", "Project");
-            dgvAddRemoveProjects.Columns.Add("delete", "");
-            dgvAddRemoveProjects.Columns[0].Width = (Width - 100) / 2;
-            dgvAddRemoveProjects.Columns[1].Width = (Width - 100) / 2;
+            dgvAddRemoveProjects.Columns[0].Width = (int)(InitWidth * .7);
+            DataGridViewButtonColumn deleteProjects = new DataGridViewButtonColumn
+            {
+                Name = "delete_column",
+                Text = "Add/Delete"
+            };
+            dgvAddRemoveProjects.Columns.Add(deleteProjects);
+            dgvAddRemoveProjects.Columns[1].Width = (int)(InitWidth * .3);
+            dgvAddRemoveProjects.RowHeadersVisible = false;
+            dgvAddRemoveProjects.AllowUserToAddRows = false;
 
             //    DataGridViewButtonColumn uninstallButtonColumn = new DataGridViewButtonColumn();
             //uninstallButtonColumn.Name = "uninstall_column";
@@ -65,9 +74,9 @@ namespace JiraTasks
             dgvAddRemoveProjects.Show();
             foreach (var project in UserPrefs.Projects)
             {
-                var button = new Button { Text = "Delete" };
-                dgvAddRemoveProjects.Rows.Add(project.ProjectName, button);
+                dgvAddRemoveProjects.Rows.Add(project.ProjectName, "Delete");
             }
+            dgvAddRemoveProjects.Rows.Add("", "Add");
         }
 
         private void bSaveChanges_Click(object sender, System.EventArgs e)
@@ -119,6 +128,20 @@ namespace JiraTasks
         private void AddRemoveProjects_Load(object sender, System.EventArgs e)
         {
             this.Location = new Point(X + 10, Y + 10);
+        }
+
+        private void dgvAddRemoveProjects_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            MessageBox.Show($"{e.RowIndex},{e.ColumnIndex}");
+            if (e.ColumnIndex == 1)
+            {
+                DeleteGivenProject(e.RowIndex, e.ColumnIndex);
+            }
+        }
+
+        private void DeleteGivenProject(int row, int column)
+        {
+            MessageBox.Show(dgvAddRemoveProjects.Rows[row].Cells[column].Value.ToString());
         }
     }
 }
