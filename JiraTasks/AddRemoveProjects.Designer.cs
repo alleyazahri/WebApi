@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddRemoveProjects));
             this.dgvAddRemoveProjects = new System.Windows.Forms.DataGridView();
             this.bSaveChanges = new System.Windows.Forms.Button();
             this.bDiscardChanges = new System.Windows.Forms.Button();
@@ -37,19 +38,21 @@
             // dgvAddRemoveProjects
             // 
             this.dgvAddRemoveProjects.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvAddRemoveProjects.Location = new System.Drawing.Point(12, 29);
+            this.dgvAddRemoveProjects.Location = new System.Drawing.Point(14, 36);
+            this.dgvAddRemoveProjects.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dgvAddRemoveProjects.Name = "dgvAddRemoveProjects";
             this.dgvAddRemoveProjects.RowTemplate.Height = 24;
-            this.dgvAddRemoveProjects.Size = new System.Drawing.Size(656, 182);
+            this.dgvAddRemoveProjects.Size = new System.Drawing.Size(738, 228);
             this.dgvAddRemoveProjects.TabIndex = 0;
             this.dgvAddRemoveProjects.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAddRemoveProjects_CellEndEdit);
             // 
             // bSaveChanges
             // 
             this.bSaveChanges.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bSaveChanges.Location = new System.Drawing.Point(526, 217);
+            this.bSaveChanges.Location = new System.Drawing.Point(592, 271);
+            this.bSaveChanges.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.bSaveChanges.Name = "bSaveChanges";
-            this.bSaveChanges.Size = new System.Drawing.Size(142, 32);
+            this.bSaveChanges.Size = new System.Drawing.Size(160, 40);
             this.bSaveChanges.TabIndex = 1;
             this.bSaveChanges.Text = "Save Changes";
             this.bSaveChanges.UseVisualStyleBackColor = true;
@@ -58,9 +61,10 @@
             // bDiscardChanges
             // 
             this.bDiscardChanges.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bDiscardChanges.Location = new System.Drawing.Point(357, 217);
+            this.bDiscardChanges.Location = new System.Drawing.Point(402, 271);
+            this.bDiscardChanges.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.bDiscardChanges.Name = "bDiscardChanges";
-            this.bDiscardChanges.Size = new System.Drawing.Size(154, 32);
+            this.bDiscardChanges.Size = new System.Drawing.Size(173, 40);
             this.bDiscardChanges.TabIndex = 2;
             this.bDiscardChanges.Text = "Discard Changes";
             this.bDiscardChanges.UseVisualStyleBackColor = true;
@@ -68,14 +72,17 @@
             // 
             // AddRemoveProjects
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(680, 261);
+            this.ClientSize = new System.Drawing.Size(765, 326);
             this.Controls.Add(this.bDiscardChanges);
             this.Controls.Add(this.bSaveChanges);
             this.Controls.Add(this.dgvAddRemoveProjects);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "AddRemoveProjects";
             this.Text = "Add/Remove Projects";
+            this.Load += new System.EventHandler(this.AddRemoveProjects_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvAddRemoveProjects)).EndInit();
             this.ResumeLayout(false);
 
