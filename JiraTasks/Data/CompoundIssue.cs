@@ -1,4 +1,5 @@
 ﻿using Atlassian.Jira;
+using System.Collections.Generic;
 
 namespace JiraTasks.Data
 {
@@ -7,10 +8,18 @@ namespace JiraTasks.Data
         public Issue DevTask { get; set; }
         public Issue LinkedTask { get; set; }
 
-        public object[] ToStringArray()
+        public object[] ToObjectArray(Dictionary<string, string> userNotes)
         {
             string status = GetIssueSummaryEquivalent(DevTask.Status.Name);
-            return new object[] { DevTask.Key.Value, LinkedTask?.Key?.Value ?? "", status, DevTask.Summary, DevTask.Description?.Substring(0, DevTask.Description.Length > 300 ? 300 : DevTask.Description.Length) };
+            return new object[]
+            {
+                DevTask.Key.Value,
+                LinkedTask?.Key?.Value ?? "",
+                status,
+                DevTask.Summary,
+                DevTask.Description?.Substring(0, DevTask.Description.Length > 300 ? 300 : DevTask.Description.Length),
+                userNotes.ContainsKey(DevTask.Key.Value) ? userNotes[DevTask.Key.Value] : ""
+            };
         }
 
         public static string GetIssueSummaryEquivalent(string issueSummary)

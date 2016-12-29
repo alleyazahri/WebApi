@@ -265,7 +265,7 @@ namespace JiraTasks
                 IssueList = TaskBusi.CompareTasksToUserPrefs(Tasks, UserPreferences.LinkedTaskList);
                 for (int i = 0; i < IssueList.Count; i++)
                 {
-                    dgJiraTaskList.Rows.Add(IssueList[i].ToStringArray(UserPreferences.Notes));
+                    dgJiraTaskList.Rows.Add(IssueList[i].ToObjectArray(UserPreferences.Notes));
                     ColorDataGridViewCell(i, 0, IssueList[i].DevTask);
                     ColorDataGridViewCell(i, 1, IssueList[i].LinkedTask);
                 }
