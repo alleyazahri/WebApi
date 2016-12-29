@@ -4,7 +4,9 @@ using JiraTasks.Data;
 using JiraTasks.MainWindowBusi;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,10 +17,12 @@ namespace JiraTasks
         private Login LoginWindow { get; set; }
         private List<Issue> Tasks { get; set; }
         private List<CompoundIssue> IssueList { get; set; }
-        private UserPrefs UserPreferences { get; set; }
-        private TaskBusi TaskBusi { get; set; }
+        private UserPrefs UserPreferences { get; }
+        private TaskBusi TaskBusi { get; }
         private AddRemoveProjects AddRemoveProjectsWindow { get; set; }
-        private RowColumn CurrentRowColumn { get; set; }
+        private RowColumn CurrentRowColumn { get; }
+
+        private int WorkingWidth => Width - dgJiraTaskList.Columns[0].Width - dgJiraTaskList.Columns[1].Width - dgJiraTaskList.Columns[2].Width - 58;
 
         /// <summary>
         /// Initializes the TaskList window
@@ -31,36 +35,19 @@ namespace JiraTasks
             CurrentRowColumn = new RowColumn();
             UserPreferences = new UserPrefs(LoginWindow.SettingsPath, "UPJTFO23.settings");
             UserPreferences.Load();
+            LoadProjectMenu();
             TaskBusi = new TaskBusi(LoginWindow.LogCont);
-            LoadDataGridViewContextMenu();
             if (LoginWindow.loginSettings.SavePassword != CheckState.Checked)
                 LoginWindow.ShowDialog();
         }
 
         #region Events
 
-        private void dgJiraTaskList_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        //Main Menu Item Events
+        private void colorKeyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dataGrid = sender as DataGridView;
-            if (dataGrid == null)
-                throw new Exception("the data grid is null, something went seriously wrong O.o");
-            DataGridViewCellDoubleClicked(e.RowIndex, e.ColumnIndex, dataGrid);
-        }
-
-        private void dgJiraTaskList_SelectionChanged(object sender, EventArgs e)
-        {
-            dgJiraTaskList.ClearSelection();
-        }
-
-        private void TaskList_Shown(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            //TODO: Add a 'Loading' Label :)
-            if (LoginWindow.LogCont != null && LoginWindow.LogCont.IsLoggedIn())
-                LoadDataGridView();
-            else
-                pLoginToViewTasks.Visible = true;
-            Cursor.Current = Cursors.Default;
+            ColorKeyWindow asdf = new ColorKeyWindow();
+            asdf.ShowDialog();
         }
 
         private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -83,17 +70,87 @@ namespace JiraTasks
             AddAndRemoveProjects();
         }
 
-        private void TaskList_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            UserPreferences.Save();
-            //TODO: Just save the current filter options anyways and open the next time with those prefs
-        }
-
         private void linkTaskToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreateLinkWindowCreation();
         }
 
+        //Sub Menu Item Events
+        private void projectSubMenuItem_Click(object sender, EventArgs e)
+        {
+            var toolStripItem = sender as ToolStripMenuItem;
+            FilterProjects(toolStripItem);
+        }
+
+        //Main Window Events
+        private void TaskList_Shown(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            //TODO: Add a 'Loading' Label :)
+            if (LoginWindow.LogCont != null && LoginWindow.LogCont.IsLoggedIn())
+                LoadDataGridView();
+            else
+                pLoginToViewTasks.Visible = true;
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void MainWindow_ResizeEnd(object sender, EventArgs e)
+        {
+            AutoAdjustColumnWidths();
+        }
+
+        //Data Grid View Events
+        private void dgJiraTaskList_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            DataGridViewCellDoubleClicked(e.RowIndex, e.ColumnIndex, dgJiraTaskList);
+        }
+
+        private void dgJiraTaskList_SelectionChanged(object sender, EventArgs e)
+        {
+            dgJiraTaskList.ClearSelection();
+        }
+
+        private void dgJiraTaskList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 5)
+            {
+                SaveNotesToTask(
+                    dgJiraTaskList.Rows[e.RowIndex].Cells[0].Value.ToString(),
+                    dgJiraTaskList.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString());
+            }
+        }
+
+        private void dgJiraTaskList_Sorted(object sender, EventArgs e)
+        {
+            SaveSortPreferences();
+        }
+
+        private void dgJiraTaskList_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right && e.RowIndex > -1 && e.ColumnIndex > -1)
+            {
+                ContextMenuStrip mnu = new ContextMenuStrip();
+                ToolStripMenuItem mnuLogWork = new ToolStripMenuItem("Log Work");
+                ToolStripMenuItem mnuAddLink = new ToolStripMenuItem("Add Link");
+                ToolStripMenuItem mnuRemoveLink = new ToolStripMenuItem("Remove Link");
+                ToolStripMenuItem mnuMarkIrrelevant = new ToolStripMenuItem("Mark Irrelevant");
+                //Assign event handlers
+                mnuRemoveLink.Click += dgvtaskContextMenu_RemoveLink;
+                mnuAddLink.Click += dgvtaskContextMenu_AddLink;
+                mnuLogWork.Click += dvgTaskContextMenu_LogWork;
+                mnuMarkIrrelevant.Click += dvgTaskContextMenu_MarkIrrelevant;
+
+                CurrentRowColumn.Row = e.RowIndex;
+                CurrentRowColumn.Column = e.ColumnIndex;
+
+                //Add to main context menu
+                mnu.Items.AddRange(new ToolStripItem[] { mnuMarkIrrelevant, mnuLogWork, mnuAddLink, mnuRemoveLink });
+                //mnu.Show(this,new Point(e.X,e.Y));
+                dgJiraTaskList.ContextMenuStrip = mnu;
+            }
+        }
+
+        //Data Grid View Sub Menu Item Events
         private void dgvtaskContextMenu_RemoveLink(object sender, EventArgs e)
         {
             MessageBox.Show("Not Yet Implemented!");
@@ -134,6 +191,7 @@ namespace JiraTasks
                 dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[2].Value =
                     $"7 - {dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[2].Value}";
             }
+            UserPreferences.Save();
             dgJiraTaskList.ContextMenuStrip = null;
         }
 
@@ -141,35 +199,56 @@ namespace JiraTasks
 
         #region Data Grid View Logic
 
-        private void LoadDataGridViewContextMenu()
+        private void SaveSortPreferences()
         {
-            //Assign to datagridview
-            //dgJiraTaskList.ContextMenuStrip = mnu;
+            UserPreferences.TaskSortOrder = dgJiraTaskList.SortOrder;
+            UserPreferences.SortedColumn = dgJiraTaskList.SortedColumn.DisplayIndex;
+            UserPreferences.Save();
         }
 
-        private async void LoadDataGridView()
+        private async void LoadDataGridView(bool clearOriginalGrid = false)
         {
-            dgJiraTaskList.Columns.Add("DevTask", "Task to Follow");
-            dgJiraTaskList.Columns.Add("MyTask", "My Task");
-            dgJiraTaskList.Columns.Add("Status", "Status");
-            dgJiraTaskList.Columns.Add("TaskName", "Summary");
-            dgJiraTaskList.Columns.Add("TaskDescription", "Description");
-            dgJiraTaskList.Columns.Add("Notes", "Notes");
+            if (clearOriginalGrid)
+            {
+                dgJiraTaskList.Rows.Clear();
+                dgJiraTaskList.Refresh();
+            }
+            else
+            {
+                dgJiraTaskList.Columns.Add("DevTask", "Task to Follow");
+                dgJiraTaskList.Columns.Add("MyTask", "My Task");
+                dgJiraTaskList.Columns.Add("Status", "Status");
+                dgJiraTaskList.Columns.Add("TaskName", "Summary");
+                dgJiraTaskList.Columns.Add("TaskDescription", "Description");
+                dgJiraTaskList.Columns.Add("Notes", "Notes");
+                dgJiraTaskList.RowHeadersVisible = false;
 
-            dgJiraTaskList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dgJiraTaskList.Columns[3].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgJiraTaskList.Columns[3].Width = (int)((Width - 30) * .2);
-            dgJiraTaskList.Columns[4].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            dgJiraTaskList.Columns[4].Width = (int)((Width - 30) * .4);
+                dgJiraTaskList.Columns[0].Width = 116;
+                dgJiraTaskList.Columns[1].Width = 116;
+                dgJiraTaskList.Columns[2].Width = 109;
 
-            dgJiraTaskList.AllowUserToAddRows = false;
-            dgJiraTaskList.AllowUserToOrderColumns = true;
-            dgJiraTaskList.AllowUserToDeleteRows = false;
+                //Set all columns to read only except the last one
+                dgJiraTaskList.Columns[0].ReadOnly = true;
+                dgJiraTaskList.Columns[1].ReadOnly = true;
+                dgJiraTaskList.Columns[2].ReadOnly = true;
+                dgJiraTaskList.Columns[3].ReadOnly = true;
+                dgJiraTaskList.Columns[4].ReadOnly = true;
 
-            dgJiraTaskList.Show();
+                dgJiraTaskList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+                dgJiraTaskList.Columns[3].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                dgJiraTaskList.Columns[4].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                dgJiraTaskList.Columns[5].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                AutoAdjustColumnWidths();
 
-            var task = new Task<List<Issue>>(TaskBusi.PopulateJiraTasks);
-            task.Start();
+                dgJiraTaskList.AllowUserToAddRows = false;
+                dgJiraTaskList.AllowUserToOrderColumns = true;
+                dgJiraTaskList.AllowUserToDeleteRows = false;
+
+                dgJiraTaskList.Show();
+            }
+
+            var filter = GetCurrentFilterOptions();
+            var task = Task.Factory.StartNew(() => TaskBusi.PopulateJiraTasks(filter)); // new Task<List<Issue>>(TaskBusi.PopulateJiraTasks);
             await task.ConfigureAwait(true);
             await task;
             Tasks = task.Result;
@@ -177,7 +256,7 @@ namespace JiraTasks
             {
                 for (int i = 0; i < Tasks.Count; i++)
                 {
-                    dgJiraTaskList.Rows.Add(Tasks[i].ToStringArray());
+                    dgJiraTaskList.Rows.Add(Tasks[i].ToObjectArray(UserPreferences.Notes));
                     ColorDataGridViewCell(i, 0, Tasks[i]);
                 }
             }
@@ -186,11 +265,28 @@ namespace JiraTasks
                 IssueList = TaskBusi.CompareTasksToUserPrefs(Tasks, UserPreferences.LinkedTaskList);
                 for (int i = 0; i < IssueList.Count; i++)
                 {
-                    dgJiraTaskList.Rows.Add(IssueList[i].ToStringArray());
+                    dgJiraTaskList.Rows.Add(IssueList[i].ToStringArray(UserPreferences.Notes));
                     ColorDataGridViewCell(i, 0, IssueList[i].DevTask);
                     ColorDataGridViewCell(i, 1, IssueList[i].LinkedTask);
                 }
             }
+            if (UserPreferences.TaskSortOrder != SortOrder.None && UserPreferences.SortedColumn != -1)
+                dgJiraTaskList.Sort(
+                    dgJiraTaskList.Columns[UserPreferences.SortedColumn],
+                    UserPreferences.TaskSortOrder == SortOrder.Ascending
+                        ? ListSortDirection.Ascending
+                        : ListSortDirection.Descending);
+        }
+
+        private TaskFilter GetCurrentFilterOptions()
+        {
+            var filter = new TaskFilter()
+            {
+                Project = UserPreferences.Projects.Where(x => x.ProjectIsSelected).Select(x => x.ProjectName).ToList(),
+                UpdatedSince = DateTime.Now.AddMonths(-7),
+                ResolutionDateAfter = DateTime.Now.AddMonths(-3)
+            };
+            return filter;
         }
 
         private void DataGridViewCellDoubleClicked(int row, int column, DataGridView dataGrid)
@@ -214,7 +310,7 @@ namespace JiraTasks
         /// </summary>
         /// <param name="row"></param>
         /// <param name="column"></param>
-        /// <param name="statusName"></param>
+        /// <param name="issue"></param>
         internal void ColorDataGridViewCell(int row, int column, Issue issue)
         {
             if (issue == null)
@@ -236,7 +332,7 @@ namespace JiraTasks
                 case "In Progress":
                 case "Acceptance Testing":
                 case "Code Review":
-                    dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = Color.Turquoise;
+                    dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = Color.Cyan;
                     break;
 
                 case "Closed":
@@ -297,6 +393,13 @@ namespace JiraTasks
             return true;
         }
 
+        private void AutoAdjustColumnWidths()
+        {
+            dgJiraTaskList.Columns[3].Width = (int)(WorkingWidth * .2);
+            dgJiraTaskList.Columns[4].Width = (int)(WorkingWidth * .45);
+            dgJiraTaskList.Columns[5].Width = (int)(WorkingWidth * .35);
+        }
+
         #endregion Data Grid View Logic
 
         #region Login/Logout Logic
@@ -327,58 +430,76 @@ namespace JiraTasks
 
         private void AddAndRemoveProjects()
         {
-            AddRemoveProjectsWindow = new AddRemoveProjects(UserPreferences.Projects);
-            AddRemoveProjectsWindow.ShowDialog();
+            AddRemoveProjectsWindow = new AddRemoveProjects(UserPreferences, TaskBusi, this.Left, this.Top);
+            if (AddRemoveProjectsWindow.ShowDialog() == DialogResult.OK)
+            {
+                AddProjectMenuItems();
+            }
+        }
+
+        private void AddProjectMenuItems()
+        {
+            //Add the user prefs
+            UserPreferences.Save();
+
+            //Determine which projects need to be added and which need to be removed
+            var prefs = UserPreferences.DeepCopy();
+            var projectsToAdd = prefs.Projects;
+            var projectsToRemove = new List<ToolStripMenuItem>();
+            foreach (ToolStripMenuItem dropDownItem in projectsToolStripMenuItem.DropDownItems)
+            {
+                var proj = projectsToAdd.FirstOrDefault(x => x.ProjectName == dropDownItem.ToString());
+                if (proj != null)
+                    projectsToAdd.Remove(proj);
+                else if (dropDownItem.ToString() != "Add/Remove Project")
+                    projectsToRemove.Add(dropDownItem);
+            }
+
+            //Add any new projects to the menu
+            foreach (var project in projectsToAdd)
+            {
+                var projectMenuItem = new ToolStripMenuItem(project.ProjectName);
+                projectMenuItem.Click += projectSubMenuItem_Click;
+                projectMenuItem.Checked = project.ProjectIsSelected;
+                projectsToolStripMenuItem.DropDownItems.Add(projectMenuItem);
+            }
+
+            //Remove any old projects from the menu
+            foreach (var project in projectsToRemove)
+            {
+                projectsToolStripMenuItem.DropDownItems.Remove(project);
+            }
+        }
+
+        private void LoadProjectMenu()
+        {
+            //Add any new projects to the menu
+            foreach (var project in UserPreferences.Projects)
+            {
+                var projectMenuItem = new ToolStripMenuItem(project.ProjectName);
+                projectMenuItem.Click += projectSubMenuItem_Click;
+                projectMenuItem.Checked = project.ProjectIsSelected;
+                projectsToolStripMenuItem.DropDownItems.Add(projectMenuItem);
+            }
         }
 
         #endregion Add/Remove Project Window Logic
 
-        private void dgJiraTaskList_ColumnSortModeChanged(object sender, DataGridViewColumnEventArgs e)
+        private void SaveNotesToTask(string task, string value)
         {
-            var asdf = dgJiraTaskList.SortOrder;
-            var fdsa = dgJiraTaskList.SortedColumn;
+            if (string.IsNullOrEmpty(value))
+                UserPreferences.Notes.Remove(task);
+            else
+                UserPreferences.Notes[task] = value;
+            UserPreferences.Save();
         }
 
-        private void dgJiraTaskList_Sorted(object sender, EventArgs e)
+        private void FilterProjects(ToolStripMenuItem toolStripItem)
         {
-            var asdf = dgJiraTaskList.SortOrder;
-            var fdsa = dgJiraTaskList.SortedColumn;
-        }
-
-        private void dgJiraTaskList_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right && e.RowIndex > -1 && e.ColumnIndex > -1)
-            {
-                ContextMenuStrip mnu = new ContextMenuStrip();
-                ToolStripMenuItem mnuLogWork = new ToolStripMenuItem("Log Work");
-                ToolStripMenuItem mnuAddLink = new ToolStripMenuItem("Add Link");
-                ToolStripMenuItem mnuRemoveLink = new ToolStripMenuItem("Remove Link");
-                ToolStripMenuItem mnuMarkIrrelevant = new ToolStripMenuItem("Mark Irrelevant");
-                //Assign event handlers
-                mnuRemoveLink.Click += dgvtaskContextMenu_RemoveLink;
-                mnuAddLink.Click += dgvtaskContextMenu_AddLink;
-                mnuLogWork.Click += dvgTaskContextMenu_LogWork;
-                mnuMarkIrrelevant.Click += dvgTaskContextMenu_MarkIrrelevant;
-
-                CurrentRowColumn.Row = e.RowIndex;
-                CurrentRowColumn.Column = e.ColumnIndex;
-
-                //Add to main context menu
-                mnu.Items.AddRange(new ToolStripItem[] { mnuMarkIrrelevant, mnuLogWork, mnuAddLink, mnuRemoveLink });
-                //mnu.Show(this,new Point(e.X,e.Y));
-                dgJiraTaskList.ContextMenuStrip = mnu;
-            }
-        }
-
-        private void colorKeyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ColorKeyWindow asdf = new ColorKeyWindow();
-            asdf.ShowDialog();
-        }
-
-        private void dgJiraTaskList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            MessageBox.Show("Will be implementing soon...");
+            toolStripItem.Checked = !toolStripItem.Checked;
+            var project = UserPreferences.Projects.FirstOrDefault(x => x.ProjectName == toolStripItem.Text);
+            project.ProjectIsSelected = toolStripItem.Checked;
+            LoadDataGridView(true);
         }
     }
 }
