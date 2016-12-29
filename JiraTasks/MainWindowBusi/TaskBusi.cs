@@ -12,14 +12,8 @@ namespace JiraTasks.MainWindowBusi
         {
         }
 
-        internal List<Issue> PopulateJiraTasks()
+        internal List<Issue> PopulateJiraTasks(TaskFilter filter)
         {
-            var filter = new TaskFilter()
-            {
-                Project = new List<string>() { "XWESVC" },
-                UpdatedSince = DateTime.Now.AddMonths(-7),
-                ResolutionDateAfter = DateTime.Now.AddMonths(-3)
-            };
             return TaskController.GetIssues(filter: filter);
         }
 
@@ -59,6 +53,23 @@ namespace JiraTasks.MainWindowBusi
                 tasks.RemoveAll(x => x.Key.Value == irrelevantTask);
             }
             return tasks;
+        }
+
+        public bool VerifyProjectExists(string projectName)
+        {
+            var filter = new TaskFilter()
+            {
+                Project = new List<string>() { projectName.ToUpper() }
+            };
+            try
+            {
+                TaskController.GetIssues(1, filter);
+                return true;
+            }
+            catch (AggregateException)
+            {
+                return false;
+            }
         }
     }
 }
