@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ColorKeyWindow));
             this.cdColorPicker = new System.Windows.Forms.ColorDialog();
             this.lInProgress = new System.Windows.Forms.Label();
             this.bInProgress = new System.Windows.Forms.Button();
@@ -60,6 +61,7 @@
             this.ClientSize = new System.Drawing.Size(227, 305);
             this.Controls.Add(this.bInProgress);
             this.Controls.Add(this.lInProgress);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ColorKeyWindow";
             this.Text = "ColorKeyWindow";
             this.ResumeLayout(false);
