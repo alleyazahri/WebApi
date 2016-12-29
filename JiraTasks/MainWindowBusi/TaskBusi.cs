@@ -57,13 +57,9 @@ namespace JiraTasks.MainWindowBusi
 
         public bool VerifyProjectExists(string projectName)
         {
-            var filter = new TaskFilter()
-            {
-                Project = new List<string>() { projectName.ToUpper() }
-            };
             try
             {
-                TaskController.GetIssues(1, filter);
+                TaskController.GetIssuesInProject(projectName, 1);
                 return true;
             }
             catch (AggregateException)
