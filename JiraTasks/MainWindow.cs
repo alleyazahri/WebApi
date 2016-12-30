@@ -83,7 +83,7 @@ namespace JiraTasks
         }
 
         //Main Window Events
-        private void TaskList_Shown(object sender, EventArgs e)
+        private void MainWindow_Shown(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             //TODO: Add a 'Loading' Label :)
@@ -195,6 +195,12 @@ namespace JiraTasks
             dgJiraTaskList.ContextMenuStrip = null;
         }
 
+        //Miscellaneous Events
+        private void bRefresh_Click(object sender, EventArgs e)
+        {
+            LoadDataGridView(true);
+        }
+
         #endregion Events
 
         #region Data Grid View Logic
@@ -208,6 +214,7 @@ namespace JiraTasks
 
         private async void LoadDataGridView(bool clearOriginalGrid = false)
         {
+            bRefresh.Visible = false;
             if (clearOriginalGrid)
             {
                 dgJiraTaskList.Rows.Clear();
@@ -276,6 +283,7 @@ namespace JiraTasks
                     UserPreferences.TaskSortOrder == SortOrder.Ascending
                         ? ListSortDirection.Ascending
                         : ListSortDirection.Descending);
+            LoadRefreshButton();
         }
 
         private TaskFilter GetCurrentFilterOptions()
@@ -291,7 +299,12 @@ namespace JiraTasks
 
         private void DataGridViewCellDoubleClicked(int row, int column, DataGridView dataGrid)
         {
-            if (row >= 0 && column >= 0)
+            if (row >= 0 && column == 5)
+            {
+                dgJiraTaskList.CurrentCell = dgJiraTaskList.Rows[row].Cells[column];
+                dgJiraTaskList.BeginEdit(true);
+            }
+            else if (row >= 0 && column >= 0)
             {
                 if (column == 1 && (string)dataGrid.Rows[row].Cells[column].Value != "")
                     System.Diagnostics.Process.Start(
@@ -484,6 +497,12 @@ namespace JiraTasks
         }
 
         #endregion Add/Remove Project Window Logic
+
+        private void LoadRefreshButton()
+        {
+            bRefresh.Visible = true;
+            bRefresh.BackgroundImageLayout = ImageLayout.Stretch;
+        }
 
         private void SaveNotesToTask(string task, string value)
         {

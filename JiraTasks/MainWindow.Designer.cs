@@ -46,6 +46,7 @@
             this.colorKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pLoginToViewTasks = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.bRefresh = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgJiraTaskList)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.pLoginToViewTasks.SuspendLayout();
@@ -122,7 +123,7 @@
             this.projectsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addProjectToolStripMenuItem});
             this.projectsToolStripMenuItem.Name = "projectsToolStripMenuItem";
-            this.projectsToolStripMenuItem.Size = new System.Drawing.Size(211, 30);
+            this.projectsToolStripMenuItem.Size = new System.Drawing.Size(159, 30);
             this.projectsToolStripMenuItem.Text = "Projects";
             // 
             // addProjectToolStripMenuItem
@@ -203,11 +204,25 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Please Log In To View Tasks";
             // 
+            // bRefresh
+            // 
+            this.bRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.bRefresh.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.bRefresh.Image = global::JiraTasks.Properties.Resources.RefreshButton1;
+            this.bRefresh.Location = new System.Drawing.Point(1458, 36);
+            this.bRefresh.Name = "bRefresh";
+            this.bRefresh.Size = new System.Drawing.Size(32, 32);
+            this.bRefresh.TabIndex = 3;
+            this.bRefresh.UseVisualStyleBackColor = true;
+            this.bRefresh.Visible = false;
+            this.bRefresh.Click += new System.EventHandler(this.bRefresh_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1512, 820);
+            this.Controls.Add(this.bRefresh);
             this.Controls.Add(this.pLoginToViewTasks);
             this.Controls.Add(this.dgJiraTaskList);
             this.Controls.Add(this.menuStrip1);
@@ -216,7 +231,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "MainWindow";
             this.Text = "Jira Task List";
-            this.Shown += new System.EventHandler(this.TaskList_Shown);
+            this.Shown += new System.EventHandler(this.MainWindow_Shown);
             this.ResizeEnd += new System.EventHandler(this.MainWindow_ResizeEnd);
             ((System.ComponentModel.ISupportInitialize)(this.dgJiraTaskList)).EndInit();
             this.menuStrip1.ResumeLayout(false);
@@ -247,6 +262,7 @@
         private System.Windows.Forms.ToolStripMenuItem unlinkTaskToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem colorKeyToolStripMenuItem;
+        private System.Windows.Forms.Button bRefresh;
     }
 }
 
