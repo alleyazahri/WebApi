@@ -2,6 +2,7 @@
 using JiraApi;
 using JiraTasks.Data;
 using JiraTasks.MainWindowBusi;
+using JiraTasks.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,7 +23,16 @@ namespace JiraTasks
         private AddRemoveProjects AddRemoveProjectsWindow { get; set; }
         private RowColumn CurrentRowColumn { get; }
 
-        private int WorkingWidth => Width - dgJiraTaskList.Columns[0].Width - dgJiraTaskList.Columns[1].Width - dgJiraTaskList.Columns[2].Width - 58;
+        //Column Variables
+        private int DevTaskColumnIndex { get; set; }
+
+        private int MyTaskColumnIndex { get; set; }
+        private int StatusColumnIndex { get; set; }
+        private int SummaryColumnIndex { get; set; }
+        private int DescriptionColumnIndex { get; set; }
+        private int NotesColumnIndex { get; set; }
+
+        private int WorkingWidth => Width - dgJiraTaskList.Columns[DevTaskColumnIndex].Width - dgJiraTaskList.Columns[MyTaskColumnIndex].Width - dgJiraTaskList.Columns[StatusColumnIndex].Width - 58;
 
         /// <summary>
         /// Initializes the TaskList window
@@ -112,10 +122,10 @@ namespace JiraTasks
 
         private void dgJiraTaskList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 5)
+            if (e.ColumnIndex == NotesColumnIndex)
             {
                 SaveNotesToTask(
-                    dgJiraTaskList.Rows[e.RowIndex].Cells[0].Value.ToString(),
+                    dgJiraTaskList.Rows[e.RowIndex].Cells[DevTaskColumnIndex].Value.ToString(),
                     dgJiraTaskList.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString());
             }
         }
@@ -147,6 +157,7 @@ namespace JiraTasks
                 mnu.Items.AddRange(new ToolStripItem[] { mnuMarkIrrelevant, mnuLogWork, mnuAddLink, mnuRemoveLink });
                 //mnu.Show(this,new Point(e.X,e.Y));
                 dgJiraTaskList.ContextMenuStrip = mnu;
+                dgJiraTaskList.ContextMenuStrip.Show();
             }
         }
 
@@ -175,7 +186,8 @@ namespace JiraTasks
 
         private void dvgTaskContextMenu_MarkIrrelevant(object sender, EventArgs e)
         {
-            var currentCell = dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[0];
+            var devTaskCell = dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[DevTaskColumnIndex];
+            var currentCell = dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[MyTaskColumnIndex];
             if (currentCell.Style.BackColor == UserPreferences.ColorLegend.IrrelevantTasks)
             {
                 //Change cell color back by getting the task, and it's status, then coloring
@@ -187,9 +199,9 @@ namespace JiraTasks
                 {
                     ColorDataGridViewCell(CurrentRowColumn.Row, i, UserPreferences.ColorLegend.IrrelevantTasks);
                 }
-                UserPreferences.IrrelevantTasks.Add(currentCell.Value.ToString());
-                dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[2].Value =
-                    $"7 - {dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[2].Value}";
+                UserPreferences.IrrelevantTasks.Add(devTaskCell.Value.ToString());
+                dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[StatusColumnIndex].Value =
+                    $"7 - {dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[StatusColumnIndex].Value}";
             }
             UserPreferences.Save();
             dgJiraTaskList.ContextMenuStrip = null;
@@ -222,29 +234,31 @@ namespace JiraTasks
             }
             else
             {
-                dgJiraTaskList.Columns.Add("DevTask", "Task to Follow");
-                dgJiraTaskList.Columns.Add("MyTask", "My Task");
-                dgJiraTaskList.Columns.Add("Status", "Status");
-                dgJiraTaskList.Columns.Add("TaskName", "Summary");
-                dgJiraTaskList.Columns.Add("TaskDescription", "Description");
-                dgJiraTaskList.Columns.Add("Notes", "Notes");
+                dgJiraTaskList.Columns.Add("DevTask", Resources.DevTaskHeader);
+                dgJiraTaskList.Columns.Add("MyTask", Resources.MyTaskHeader);
+                dgJiraTaskList.Columns.Add(Resources.StatusHeader, Resources.StatusHeader);
+                dgJiraTaskList.Columns.Add("TaskName", Resources.SummaryHeader);
+                dgJiraTaskList.Columns.Add("TaskDescription", Resources.DescriptionHeader);
+                dgJiraTaskList.Columns.Add(Resources.NotesHeader, Resources.NotesHeader);
                 dgJiraTaskList.RowHeadersVisible = false;
 
-                dgJiraTaskList.Columns[0].Width = 116;
-                dgJiraTaskList.Columns[1].Width = 116;
-                dgJiraTaskList.Columns[2].Width = 109;
+                LoadColumnIndexProperties();
 
-                //Set all columns to read only except the last one
-                dgJiraTaskList.Columns[0].ReadOnly = true;
-                dgJiraTaskList.Columns[1].ReadOnly = true;
-                dgJiraTaskList.Columns[2].ReadOnly = true;
-                dgJiraTaskList.Columns[3].ReadOnly = true;
-                dgJiraTaskList.Columns[4].ReadOnly = true;
+                dgJiraTaskList.Columns[DevTaskColumnIndex].Width = 116;
+                dgJiraTaskList.Columns[MyTaskColumnIndex].Width = 116;
+                dgJiraTaskList.Columns[StatusColumnIndex].Width = 109;
+
+                //Set all columns to read only except the Notes column
+                dgJiraTaskList.Columns[DevTaskColumnIndex].ReadOnly = true;
+                dgJiraTaskList.Columns[MyTaskColumnIndex].ReadOnly = true;
+                dgJiraTaskList.Columns[StatusColumnIndex].ReadOnly = true;
+                dgJiraTaskList.Columns[SummaryColumnIndex].ReadOnly = true;
+                dgJiraTaskList.Columns[DescriptionColumnIndex].ReadOnly = true;
 
                 dgJiraTaskList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-                dgJiraTaskList.Columns[3].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-                dgJiraTaskList.Columns[4].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-                dgJiraTaskList.Columns[5].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                dgJiraTaskList.Columns[SummaryColumnIndex].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                dgJiraTaskList.Columns[DescriptionColumnIndex].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                dgJiraTaskList.Columns[NotesColumnIndex].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
                 AutoAdjustColumnWidths();
 
                 dgJiraTaskList.AllowUserToAddRows = false;
@@ -264,7 +278,7 @@ namespace JiraTasks
                 for (int i = 0; i < Tasks.Count; i++)
                 {
                     dgJiraTaskList.Rows.Add(Tasks[i].ToObjectArray(UserPreferences.Notes));
-                    ColorDataGridViewCell(i, 0, Tasks[i]);
+                    ColorDataGridViewCell(i, DevTaskColumnIndex, Tasks[i]);
                 }
             }
             else
@@ -273,8 +287,8 @@ namespace JiraTasks
                 for (int i = 0; i < IssueList.Count; i++)
                 {
                     dgJiraTaskList.Rows.Add(IssueList[i].ToObjectArray(UserPreferences.Notes));
-                    ColorDataGridViewCell(i, 0, IssueList[i].DevTask);
-                    ColorDataGridViewCell(i, 1, IssueList[i].LinkedTask);
+                    ColorDataGridViewCell(i, DevTaskColumnIndex, IssueList[i].DevTask);
+                    ColorDataGridViewCell(i, MyTaskColumnIndex, IssueList[i].LinkedTask);
                 }
             }
             if (UserPreferences.TaskSortOrder != SortOrder.None && UserPreferences.SortedColumn != -1)
@@ -299,21 +313,21 @@ namespace JiraTasks
 
         private void DataGridViewCellDoubleClicked(int row, int column, DataGridView dataGrid)
         {
-            if (row >= 0 && column == 5)
+            if (row >= 0 && column == NotesColumnIndex)
             {
                 dgJiraTaskList.CurrentCell = dgJiraTaskList.Rows[row].Cells[column];
                 dgJiraTaskList.BeginEdit(true);
             }
             else if (row >= 0 && column >= 0)
             {
-                if (column == 1 && (string)dataGrid.Rows[row].Cells[column].Value != "")
+                if (column == MyTaskColumnIndex && (string)dataGrid.Rows[row].Cells[column].Value != "")
                     System.Diagnostics.Process.Start(
                         $"https://epm.verisk.com/jira/browse/{dataGrid.Rows[row].Cells[column].Value}");
-                else if (column == 1)
-                    CreateLinkWindowCreation(dataGrid.Rows[row].Cells[0].Value.ToString());
+                else if (column == MyTaskColumnIndex)
+                    CreateLinkWindowCreation(dataGrid.Rows[row].Cells[DevTaskColumnIndex].Value.ToString());
                 else
                     System.Diagnostics.Process.Start(
-                        $"https://epm.verisk.com/jira/browse/{dataGrid.Rows[row].Cells[0].Value}");
+                        $"https://epm.verisk.com/jira/browse/{dataGrid.Rows[row].Cells[DevTaskColumnIndex].Value}");
                 Console.WriteLine(dataGrid?.Rows[row].Cells[column].Value);
             }
         }
@@ -336,7 +350,7 @@ namespace JiraTasks
                 {
                     dgJiraTaskList.Rows[row].Cells[i].Style.BackColor = UserPreferences.ColorLegend.IrrelevantTasks;
                 }
-                dgJiraTaskList.Rows[row].Cells[2].Value = "7 - " + dgJiraTaskList.Rows[row].Cells[2].Value;
+                dgJiraTaskList.Rows[row].Cells[StatusColumnIndex].Value = "7 - " + dgJiraTaskList.Rows[row].Cells[StatusColumnIndex].Value;
             }
             switch (issue.Status.Name)
             {
@@ -379,7 +393,7 @@ namespace JiraTasks
                 return false;
             for (int i = 0; i < dgJiraTaskList.RowCount; i++)
             {
-                if (dgJiraTaskList.Rows[i].Cells[0].Value.ToString() == mainTask.ToUpper())// && (dgJiraTaskList.Rows[i].Cells[1] == null || dgJiraTaskList.Rows[i].Cells[1].Value == ""))
+                if (dgJiraTaskList.Rows[i].Cells[DevTaskColumnIndex].Value.ToString() == mainTask.ToUpper())// && (dgJiraTaskList.Rows[i].Cells[MyTaskColumnIndex] == null || dgJiraTaskList.Rows[i].Cells[MyTaskColumnIndex].Value == ""))
                 {
                     if (UserPreferences.LinkedTaskList.ContainsKey(mainTask.ToUpper()))
                     {
@@ -388,16 +402,16 @@ namespace JiraTasks
                     try
                     {
                         var issue = TaskBusi.TaskController.GetIssue(linkedTask);
-                        dgJiraTaskList.Rows[i].Cells[1].Value = linkedTask;
+                        dgJiraTaskList.Rows[i].Cells[MyTaskColumnIndex].Value = linkedTask;
                         UserPreferences.LinkedTaskList[mainTask.ToUpper()] = linkedTask.ToUpper();
-                        ColorDataGridViewCell(i, 1, issue);
+                        ColorDataGridViewCell(i, MyTaskColumnIndex, issue);
                     }
                     catch (Exception)
                     {
                         Console.WriteLine("there was an error in finding this task...");
                     }
                 }
-                if (dgJiraTaskList.Rows[i].Cells[0].Value.ToString() == linkedTask.ToUpper())
+                if (dgJiraTaskList.Rows[i].Cells[DevTaskColumnIndex].Value.ToString() == linkedTask.ToUpper())
                 {
                     dgJiraTaskList.Rows.RemoveAt(i);
                 }
@@ -408,9 +422,9 @@ namespace JiraTasks
 
         private void AutoAdjustColumnWidths()
         {
-            dgJiraTaskList.Columns[3].Width = (int)(WorkingWidth * .2);
-            dgJiraTaskList.Columns[4].Width = (int)(WorkingWidth * .45);
-            dgJiraTaskList.Columns[5].Width = (int)(WorkingWidth * .35);
+            dgJiraTaskList.Columns[SummaryColumnIndex].Width = (int)(WorkingWidth * .2);
+            dgJiraTaskList.Columns[DescriptionColumnIndex].Width = (int)(WorkingWidth * .45);
+            dgJiraTaskList.Columns[NotesColumnIndex].Width = (int)(WorkingWidth * .35);
         }
 
         #endregion Data Grid View Logic
@@ -519,6 +533,16 @@ namespace JiraTasks
             var project = UserPreferences.Projects.FirstOrDefault(x => x.ProjectName == toolStripItem.Text);
             project.ProjectIsSelected = toolStripItem.Checked;
             LoadDataGridView(true);
+        }
+
+        private void LoadColumnIndexProperties()
+        {
+            DevTaskColumnIndex = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.DevTaskHeader).Index;
+            MyTaskColumnIndex = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.MyTaskHeader).Index;
+            StatusColumnIndex = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.StatusHeader).Index;
+            SummaryColumnIndex = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.SummaryHeader).Index;
+            DescriptionColumnIndex = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.DescriptionHeader).Index;
+            NotesColumnIndex = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.NotesHeader).Index;
         }
     }
 }
