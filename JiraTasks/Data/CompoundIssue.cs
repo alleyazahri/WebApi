@@ -7,6 +7,7 @@ namespace JiraTasks.Data
     {
         public Issue DevTask { get; set; }
         public Issue LinkedTask { get; set; }
+        public string NoTaskStatus { get; set; }
 
         public object[] ToObjectArray(Dictionary<string, string> userNotes)
         {
