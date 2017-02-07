@@ -81,6 +81,12 @@
     <Compile Include="Data\LoginSettingsDocument.cs" />
     <Compile Include="Data\RowColumn.cs" />
     <Compile Include="Data\UserPrefs.cs" />
+    <Compile Include="FilterByDate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FilterByDate.Designer.cs">
+      <DependentUpon>FilterByDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="LinkTasks.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,6 +115,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ColorKeyWindow.resx">
       <DependentUpon>ColorKeyWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FilterByDate.resx">
+      <DependentUpon>FilterByDate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LinkTasks.resx">
       <DependentUpon>LinkTasks.cs</DependentUpon>
