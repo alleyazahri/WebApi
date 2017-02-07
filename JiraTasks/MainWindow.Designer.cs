@@ -37,6 +37,7 @@
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.projectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.datesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.savedFiltersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCurrentFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tasksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -113,7 +114,8 @@
             // filterToolStripMenuItem
             // 
             this.filterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.projectsToolStripMenuItem});
+            this.projectsToolStripMenuItem,
+            this.datesToolStripMenuItem});
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(62, 29);
             this.filterToolStripMenuItem.Text = "Filter";
@@ -132,6 +134,13 @@
             this.addProjectToolStripMenuItem.Size = new System.Drawing.Size(261, 30);
             this.addProjectToolStripMenuItem.Text = "Add/Remove Project";
             this.addProjectToolStripMenuItem.Click += new System.EventHandler(this.addProjectToolStripMenuItem_Click);
+            // 
+            // datesToolStripMenuItem
+            // 
+            this.datesToolStripMenuItem.Name = "datesToolStripMenuItem";
+            this.datesToolStripMenuItem.Size = new System.Drawing.Size(159, 30);
+            this.datesToolStripMenuItem.Text = "Dates";
+            this.datesToolStripMenuItem.Click += new System.EventHandler(this.datesToolStripMenuItem_Click);
             // 
             // savedFiltersToolStripMenuItem
             // 
@@ -263,6 +272,7 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem colorKeyToolStripMenuItem;
         private System.Windows.Forms.Button bRefresh;
+        private System.Windows.Forms.ToolStripMenuItem datesToolStripMenuItem;
     }
 }
 
