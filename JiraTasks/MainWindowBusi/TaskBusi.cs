@@ -25,7 +25,10 @@ namespace JiraTasks.MainWindowBusi
             {
                 if (linkedTasks.ContainsKey(issue.Key.Value))
                 {
-                    issueList.Add(new CompoundIssue() { DevTask = issue, LinkedTask = TaskController.GetIssue(linkedTasks[issue.Key.Value]) });
+                    if (linkedTasks[issue.Key.Value].Contains("~C"))
+                        issueList.Add(new CompoundIssue { DevTask = issue, NoTaskStatus = linkedTasks[issue.Key.Value] });
+                    else
+                        issueList.Add(new CompoundIssue() { DevTask = issue, LinkedTask = TaskController.GetIssue(linkedTasks[issue.Key.Value]) });
                     removeIssues.Add(linkedTasks[issue.Key.Value]);
                 }
                 else
