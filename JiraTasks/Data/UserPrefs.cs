@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using JiraApi.DataClasses;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,6 +20,9 @@ namespace JiraTasks.Data
         public Dictionary<string, string> Notes { get; set; }
         public SortOrder TaskSortOrder { get; set; }
         public int SortedColumn { get; set; }
+        public DateTimeRange CreatedDateRange { get; set; }
+        public DateTimeRange ModifiedDateRange { get; set; }
+        public DateTimeRange ClosedDateRange { get; set; }
 
         public UserPrefs(string path, string filename)
         {
@@ -31,6 +35,9 @@ namespace JiraTasks.Data
             Notes = new Dictionary<string, string>();
             TaskSortOrder = SortOrder.None;
             SortedColumn = -1;
+            CreatedDateRange = new DateTimeRange();
+            ModifiedDateRange = new DateTimeRange();
+            ClosedDateRange = new DateTimeRange();
         }
 
         public UserPrefs DeepCopy()
@@ -43,7 +50,10 @@ namespace JiraTasks.Data
                 Notes = new Dictionary<string, string>(Notes),
                 Projects = new List<ProjectMenuItem>(Projects.Select(p => new ProjectMenuItem() { ProjectName = p.ProjectName, ProjectIsSelected = p.ProjectIsSelected })),
                 SortedColumn = SortedColumn,
-                TaskSortOrder = TaskSortOrder
+                TaskSortOrder = TaskSortOrder,
+                CreatedDateRange = CreatedDateRange.DeepCopy(),
+                ModifiedDateRange = ModifiedDateRange.DeepCopy(),
+                ClosedDateRange = ClosedDateRange.DeepCopy()
             };
         }
 
@@ -66,6 +76,9 @@ namespace JiraTasks.Data
                 Notes = deserialized.Notes;
                 TaskSortOrder = deserialized.TaskSortOrder;
                 SortedColumn = deserialized.SortedColumn;
+                CreatedDateRange = deserialized.CreatedDateRange;
+                ModifiedDateRange = deserialized.ModifiedDateRange;
+                ClosedDateRange = deserialized.ClosedDateRange;
                 return true;
             }
             catch (Exception ef)
@@ -78,6 +91,9 @@ namespace JiraTasks.Data
                 Notes = new Dictionary<string, string>();
                 TaskSortOrder = SortOrder.None;
                 SortedColumn = -1;
+                CreatedDateRange = new DateTimeRange();
+                ModifiedDateRange = new DateTimeRange();
+                ClosedDateRange = new DateTimeRange();
                 Save();
                 return false;
             }
