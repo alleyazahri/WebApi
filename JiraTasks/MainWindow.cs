@@ -366,6 +366,7 @@ namespace JiraTasks
 					dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = Color.Cyan;
 					break;
 
+				case "Ready to Merge":
 				case "Closed":
 					dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = Color.DarkSeaGreen;
 					break;
@@ -579,6 +580,7 @@ namespace JiraTasks
 			//Closed, Modified, and Created date window
 			var asdf = new FilterByDate(UserPreferences);
 			asdf.ShowDialog(this);
+			LoadDataGridView(true);
 		}
 	}
 }
