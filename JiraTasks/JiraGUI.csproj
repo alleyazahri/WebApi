@@ -76,8 +76,10 @@
     </Compile>
     <Compile Include="Data\ColorKey.cs" />
     <Compile Include="Data\CompoundIssue.cs" />
+    <Compile Include="Data\FlattenedTasks.cs" />
     <Compile Include="Data\IssueExtension.cs" />
     <Compile Include="Data\JiraIssue.cs" />
+    <Compile Include="Data\LoadedTaskLists.cs" />
     <Compile Include="Data\LoginSettingsDocument.cs" />
     <Compile Include="Data\RowColumn.cs" />
     <Compile Include="Data\UserPrefs.cs" />

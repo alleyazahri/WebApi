@@ -3,11 +3,15 @@ using System.Collections.Generic;
 
 namespace JiraTasks.Data
 {
-	internal class CompoundIssue
+	public class CompoundIssue
 	{
 		public Issue DevTask { get; set; }
 		public Issue LinkedTask { get; set; }
-		public string NoTaskStatus { get; set; }
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		/// <summary> Variable indicating whether a task with no linked task has been worked on. </summary>
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		public string NoLinkedTaskStatus { get; set; }
 
 		public object[] ToObjectArray(Dictionary<string, string> userNotes)
 		{

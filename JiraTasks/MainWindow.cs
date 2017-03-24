@@ -1,5 +1,4 @@
-﻿using Atlassian.Jira;
-using JiraApi;
+﻿using JiraApi;
 using JiraTasks.Data;
 using JiraTasks.MainWindowBusi;
 using JiraTasks.Properties;
@@ -7,18 +6,21 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace JiraTasks
 {
+	//TODO: Add error to tell user they cannot link tasks or add notes while the grid view is still loading
 	public partial class MainWindow : Form
 	{
 		private Login LoginWindow { get; set; }
-		private List<Issue> Tasks { get; set; }
+		private FlattenedTasks Tasks { get; set; }
 		private List<CompoundIssue> IssueList { get; set; }
 		private UserPrefs UserPreferences { get; }
+		private LoadedTaskLists LoadedTaskLists { get; }
 		private TaskBusi TaskBusi { get; }
 		private AddRemoveProjects AddRemoveProjectsWindow { get; set; }
 		private RowColumn CurrentRowColumn { get; }
@@ -45,8 +47,11 @@ namespace JiraTasks
 			CurrentRowColumn = new RowColumn();
 			UserPreferences = new UserPrefs(LoginWindow.SettingsPath, "UPJTFO23.settings");
 			UserPreferences.Load();
+			LoadedTaskLists = new LoadedTaskLists(Path.Combine(LoginWindow.SettingsPath, "Tasks"), "JTL0384.jgtlf");
+			LoadedTaskLists.Load();
 			LoadProjectMenu();
 			TaskBusi = new TaskBusi(LoginWindow.LogCont);
+			Tasks = new FlattenedTasks(UserPreferences, TaskBusi.TaskController);
 			if (LoginWindow.loginSettings.SavePassword != CheckState.Checked)
 				LoginWindow.ShowDialog();
 		}
@@ -98,7 +103,7 @@ namespace JiraTasks
 			Cursor.Current = Cursors.WaitCursor;
 			//TODO: Add a 'Loading' Label :)
 			if (LoginWindow.LogCont != null && LoginWindow.LogCont.IsLoggedIn())
-				LoadDataGridView();
+				LoadDataGridView(loadFromSavedSettings: true);
 			else
 				pLoginToViewTasks.Visible = true;
 			Cursor.Current = Cursors.Default;
@@ -224,75 +229,48 @@ namespace JiraTasks
 			UserPreferences.Save();
 		}
 
-		private async void LoadDataGridView(bool clearOriginalGrid = false)
+		private async void LoadDataGridView(bool clearOriginalGrid = false, bool loadFromSavedSettings = false)
 		{
+			loadingPanel.Visible = true;
 			bRefresh.Visible = false;
-			if (clearOriginalGrid)
+
+			if (!clearOriginalGrid)
+				InitializeGridHeadersAndOptions();
+
+			//'Quickly' load tasks saved from previous session
+			if (loadFromSavedSettings && LoadedTaskLists.JiraIssueTaskLists != null && LoadedTaskLists.JiraIssueTaskLists.ContainsKey("LatestLoad"))
 			{
-				dgJiraTaskList.Rows.Clear();
-				dgJiraTaskList.Refresh();
-			}
-			else
-			{
-				dgJiraTaskList.Columns.Add("DevTask", Resources.DevTaskHeader);
-				dgJiraTaskList.Columns.Add("MyTask", Resources.MyTaskHeader);
-				dgJiraTaskList.Columns.Add(Resources.StatusHeader, Resources.StatusHeader);
-				dgJiraTaskList.Columns.Add("TaskName", Resources.SummaryHeader);
-				dgJiraTaskList.Columns.Add("TaskDescription", Resources.DescriptionHeader);
-				dgJiraTaskList.Columns.Add(Resources.NotesHeader, Resources.NotesHeader);
-				dgJiraTaskList.RowHeadersVisible = false;
-
-				LoadColumnIndexProperties();
-
-				dgJiraTaskList.Columns[DevTaskColumnIndex].Width = 116;
-				dgJiraTaskList.Columns[MyTaskColumnIndex].Width = 116;
-				dgJiraTaskList.Columns[StatusColumnIndex].Width = 109;
-
-				//Set all columns to read only except the Notes column
-				dgJiraTaskList.Columns[DevTaskColumnIndex].ReadOnly = true;
-				dgJiraTaskList.Columns[MyTaskColumnIndex].ReadOnly = true;
-				dgJiraTaskList.Columns[StatusColumnIndex].ReadOnly = true;
-				dgJiraTaskList.Columns[SummaryColumnIndex].ReadOnly = true;
-				dgJiraTaskList.Columns[DescriptionColumnIndex].ReadOnly = true;
-
-				dgJiraTaskList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-				dgJiraTaskList.Columns[SummaryColumnIndex].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-				dgJiraTaskList.Columns[DescriptionColumnIndex].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-				dgJiraTaskList.Columns[NotesColumnIndex].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-				AutoAdjustColumnWidths();
-
-				dgJiraTaskList.AllowUserToAddRows = false;
-				dgJiraTaskList.AllowUserToOrderColumns = true;
-				dgJiraTaskList.AllowUserToDeleteRows = false;
-
-				dgJiraTaskList.Show();
+				Tasks.Tasks = LoadedTaskLists.JiraIssueTaskLists["LatestLoad"];
+				LoadTasksAndSortOrderToGridView();
 			}
 
+			//Now reload all tasks based on the current filter options
 			var filter = GetCurrentFilterOptions();
-			var task = Task.Factory.StartNew(() => TaskBusi.PopulateJiraTasks(filter)); // new Task<List<Issue>>(TaskBusi.PopulateJiraTasks);
-			await task.ConfigureAwait(true);
-			await task;
-			Tasks = task.Result;
-			if (UserPreferences.LinkedTaskList == null || UserPreferences.LinkedTaskList.Count == 0)
+			var getJiraTasks = Task.Factory.StartNew(() => TaskBusi.PopulateJiraTasks(filter));
+			await getJiraTasks.ConfigureAwait(true);
+			await getJiraTasks;
+			var flattenJiraTasks = Task.Factory.StartNew(() => Tasks.FlattenTasks(getJiraTasks.Result));
+			await flattenJiraTasks.ConfigureAwait(true);
+			await flattenJiraTasks;
+
+			dgJiraTaskList.Rows.Clear();
+			dgJiraTaskList.Refresh();
+			LoadTasksAndSortOrderToGridView();
+
+			LoadedTaskLists.ReplaceTasks("LatestLoad", Tasks.Tasks);
+			LoadRefreshButton();
+			loadingPanel.Visible = false;
+		}
+
+		private void LoadTasksAndSortOrderToGridView()
+		{
+			for (int i = 0; i < Tasks.Tasks.Count; i++)
 			{
-				for (int i = 0; i < Tasks.Count; i++)
-				{
-					dgJiraTaskList.Rows.Add(Tasks[i].ToObjectArray(UserPreferences.Notes));
-					ColorDataGridViewCell(i, DevTaskColumnIndex, Tasks[i]);
-				}
-			}
-			else
-			{
-				IssueList = TaskBusi.CompareTasksToUserPrefs(Tasks, UserPreferences.LinkedTaskList);
-				for (int i = 0; i < IssueList.Count; i++)
-				{
-					dgJiraTaskList.Rows.Add(IssueList[i].ToObjectArray(UserPreferences.Notes));
-					ColorDataGridViewCell(i, DevTaskColumnIndex, IssueList[i].DevTask);
-					if (IssueList[i].NoTaskStatus != null)
-						ColorDataGridViewCell(i, MyTaskColumnIndex, IssueList[i].NoTaskStatus);
-					else
-						ColorDataGridViewCell(i, MyTaskColumnIndex, IssueList[i].LinkedTask);
-				}
+				dgJiraTaskList.Rows.Add(Tasks.Tasks[i].ToObjectArray());
+				ColorDataGridViewCell(i, DevTaskColumnIndex, Tasks.Tasks[i].DevTaskColor);
+				ColorDataGridViewCell(i, MyTaskColumnIndex, Tasks.Tasks[i].LinkedTaskColor);
+				if (Tasks.Tasks[i].IsIrreleventTask)
+					ColorRowAsIrrelevent(i);
 			}
 			if (UserPreferences.TaskSortOrder != SortOrder.None && UserPreferences.SortedColumn != -1)
 				dgJiraTaskList.Sort(
@@ -300,7 +278,53 @@ namespace JiraTasks
 					UserPreferences.TaskSortOrder == SortOrder.Ascending
 						? ListSortDirection.Ascending
 						: ListSortDirection.Descending);
-			LoadRefreshButton();
+			dgJiraTaskList.Refresh();
+		}
+
+		private void InitializeGridHeadersAndOptions()
+		{
+			dgJiraTaskList.Columns.Add("DevTask", Resources.DevTaskHeader);
+			dgJiraTaskList.Columns.Add("MyTask", Resources.MyTaskHeader);
+			dgJiraTaskList.Columns.Add(Resources.StatusHeader, Resources.StatusHeader);
+			dgJiraTaskList.Columns.Add("TaskName", Resources.SummaryHeader);
+			dgJiraTaskList.Columns.Add("TaskDescription", Resources.DescriptionHeader);
+			dgJiraTaskList.Columns.Add(Resources.NotesHeader, Resources.NotesHeader);
+			dgJiraTaskList.RowHeadersVisible = false;
+
+			LoadColumnIndexProperties();
+
+			dgJiraTaskList.Columns[DevTaskColumnIndex].Width = 116;
+			dgJiraTaskList.Columns[MyTaskColumnIndex].Width = 116;
+			dgJiraTaskList.Columns[StatusColumnIndex].Width = 109;
+
+			//Set all columns to ReadOnly except the Notes column
+			dgJiraTaskList.Columns[DevTaskColumnIndex].ReadOnly = true;
+			dgJiraTaskList.Columns[MyTaskColumnIndex].ReadOnly = true;
+			dgJiraTaskList.Columns[StatusColumnIndex].ReadOnly = true;
+			dgJiraTaskList.Columns[SummaryColumnIndex].ReadOnly = true;
+			dgJiraTaskList.Columns[DescriptionColumnIndex].ReadOnly = true;
+
+			dgJiraTaskList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+			dgJiraTaskList.Columns[SummaryColumnIndex].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+			dgJiraTaskList.Columns[DescriptionColumnIndex].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+			dgJiraTaskList.Columns[NotesColumnIndex].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+			AutoAdjustColumnWidths();
+
+			dgJiraTaskList.AllowUserToAddRows = false;
+			dgJiraTaskList.AllowUserToOrderColumns = true;
+			dgJiraTaskList.AllowUserToDeleteRows = false;
+
+			dgJiraTaskList.Show();
+		}
+
+		private void ColorRowAsIrrelevent(int row)
+		{
+			dgJiraTaskList.Rows[row].Cells[StatusColumnIndex].Value = "x " + dgJiraTaskList.Rows[row].Cells[StatusColumnIndex].Value;
+			dgJiraTaskList.Rows[row].Cells[MyTaskColumnIndex].Style.BackColor = UserPreferences.ColorLegend.IrrelevantTasks;
+			dgJiraTaskList.Rows[row].Cells[StatusColumnIndex].Style.BackColor = UserPreferences.ColorLegend.IrrelevantTasks;
+			dgJiraTaskList.Rows[row].Cells[SummaryColumnIndex].Style.BackColor = UserPreferences.ColorLegend.IrrelevantTasks;
+			dgJiraTaskList.Rows[row].Cells[DescriptionColumnIndex].Style.BackColor = UserPreferences.ColorLegend.IrrelevantTasks;
+			dgJiraTaskList.Rows[row].Cells[NotesColumnIndex].Style.BackColor = UserPreferences.ColorLegend.IrrelevantTasks;
 		}
 
 		private TaskFilter GetCurrentFilterOptions()
@@ -337,73 +361,16 @@ namespace JiraTasks
 		}
 
 		/// <summary>
-		/// Colors the datagrid view cell based on the status of the task
-		/// </summary>
-		/// <param name="row"></param>
-		/// <param name="column"></param>
-		/// <param name="issue"></param>
-		internal void ColorDataGridViewCell(int row, int column, Issue issue)
-		{
-			if (issue == null)
-			{
-				return;
-			}
-			if (UserPreferences.IrrelevantTasks.Contains(issue.Key.Value))
-			{
-				for (int i = 0; i < dgJiraTaskList.Rows[row].Cells.Count; i++)
-				{
-					dgJiraTaskList.Rows[row].Cells[i].Style.BackColor = UserPreferences.ColorLegend.IrrelevantTasks;
-				}
-				dgJiraTaskList.Rows[row].Cells[StatusColumnIndex].Value = "7 - " + dgJiraTaskList.Rows[row].Cells[StatusColumnIndex].Value;
-			}
-			switch (issue.Status.Name)
-			{
-				case "Integration Testing":
-				case "Functional Testing":
-				case "In Progress":
-				case "Acceptance Testing":
-				case "Code Review":
-					dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = Color.Cyan;
-					break;
-
-				case "Ready to Merge":
-				case "Closed":
-					dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = Color.DarkSeaGreen;
-					break;
-
-				default:
-					dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = Color.Crimson;
-					break;
-			}
-		}
-
-		internal void ColorDataGridViewCell(int row, int column, string value)
-		{
-			switch (value)
-			{
-				case "~C-InProgress":
-					dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = Color.Cyan;
-					break;
-
-				case "~C-Complete":
-					dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = Color.DarkSeaGreen;
-					break;
-
-				case "~C-NotStarted":
-					dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = Color.Crimson;
-					break;
-			}
-		}
-
-		/// <summary>
 		/// Colors the datagrid view cell based on the given color
 		/// </summary>
 		/// <param name="row"></param>
 		/// <param name="column"></param>
 		/// <param name="color"></param>
-		internal void ColorDataGridViewCell(int row, int column, Color color)
+		internal void ColorDataGridViewCell(int row, int column, Color? color)
 		{
-			dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = color;
+			if (color == null)
+				return;
+			dgJiraTaskList.Rows[row].Cells[column].Style.BackColor = color.Value;
 		}
 
 		internal bool CreateLinkBetweenTasks(string mainTask, string linkedTask)
@@ -422,23 +389,12 @@ namespace JiraTasks
 					{
 						//TODO: Check if a task is already linked, then ask the person if they want to unlink that in favor of the new task
 					}
-					if (linkedTask.Contains("~C"))
-					{
-						ColorDataGridViewCell(i, MyTaskColumnIndex, linkedTask);
-						UserPreferences.LinkedTaskList[mainTask.ToUpper()] = linkedTask;
-						break;
-					}
-					try
-					{
-						var issue = TaskBusi.TaskController.GetIssue(linkedTask);
-						dgJiraTaskList.Rows[i].Cells[MyTaskColumnIndex].Value = linkedTask;
-						UserPreferences.LinkedTaskList[mainTask.ToUpper()] = linkedTask.ToUpper();
-						ColorDataGridViewCell(i, MyTaskColumnIndex, issue);
-					}
-					catch (Exception)
-					{
-						Console.WriteLine("there was an error in finding this task...");
-					}
+
+					dgJiraTaskList.Rows[i].Cells[MyTaskColumnIndex].Value = linkedTask.Contains("~C") ? "" : linkedTask;
+					var updated = Tasks.LinkNewTask(mainTask, linkedTask);
+					ColorDataGridViewCell(i, MyTaskColumnIndex, updated.LinkedTaskColor);
+					LoadedTaskLists.ReplaceTasks("LatestLoad", Tasks.Tasks);
+					UserPreferences.LinkedTaskList[mainTask.ToUpper()] = linkedTask;
 				}
 				if (dgJiraTaskList.Rows[i].Cells[DevTaskColumnIndex].Value.ToString() == linkedTask.ToUpper())
 				{
@@ -462,6 +418,8 @@ namespace JiraTasks
 
 		private void Logout()
 		{
+			LoadedTaskLists.JiraIssueTaskLists = null;
+			LoadedTaskLists.Save();
 			dgJiraTaskList.Rows.Clear();
 			LoginWindow.LogCont = new LoginController();
 			LoginWindow.loginSettings.ClearUser();
@@ -580,7 +538,11 @@ namespace JiraTasks
 			//Closed, Modified, and Created date window
 			var asdf = new FilterByDate(UserPreferences);
 			asdf.ShowDialog(this);
-			LoadDataGridView(true);
+			if (asdf.ValueChanged)
+			{
+				UserPreferences.Load();
+				LoadDataGridView(true);
+			}
 		}
 	}
 }
