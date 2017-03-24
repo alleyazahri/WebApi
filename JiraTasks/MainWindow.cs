@@ -14,6 +14,7 @@ using System.Windows.Forms;
 namespace JiraTasks
 {
 	//TODO: Add error to tell user they cannot link tasks or add notes while the grid view is still loading
+	// TODO: Figure out why the changed date isn't being saved :/
 	public partial class MainWindow : Form
 	{
 		private Login LoginWindow { get; set; }
