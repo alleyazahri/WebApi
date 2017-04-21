@@ -10,21 +10,23 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Atlassian.Jira;
 
 namespace JiraTasks
 {
 	//TODO: Add error to tell user they cannot link tasks or add notes while the grid view is still loading
-	// TODO: Figure out why the changed date isn't being saved :/
 	public partial class MainWindow : Form
 	{
+		#region Properties
+
 		private Login LoginWindow { get; set; }
 		private FlattenedTasks Tasks { get; set; }
-		private List<CompoundIssue> IssueList { get; set; }
 		private UserPrefs UserPreferences { get; }
 		private LoadedTaskLists LoadedTaskLists { get; }
 		private TaskBusi TaskBusi { get; }
 		private AddRemoveProjects AddRemoveProjectsWindow { get; set; }
-		private RowColumn CurrentRowColumn { get; }
+		private RowColumn CurrentRowColumn { get; set; }
+		private bool IsLoading { get; set; }
 
 		//Column Variables
 		private int DevTaskColumnIndex { get; set; }
@@ -37,6 +39,8 @@ namespace JiraTasks
 
 		private int WorkingWidth => Width - dgJiraTaskList.Columns[DevTaskColumnIndex].Width - dgJiraTaskList.Columns[MyTaskColumnIndex].Width - dgJiraTaskList.Columns[StatusColumnIndex].Width - 58;
 
+		#endregion Properties
+
 		/// <summary>
 		/// Initializes the TaskList window
 		/// </summary>
@@ -44,8 +48,6 @@ namespace JiraTasks
 		{
 			InitializeComponent();
 			LoginWindow = new Login();
-			IssueList = new List<CompoundIssue>();
-			CurrentRowColumn = new RowColumn();
 			UserPreferences = new UserPrefs(LoginWindow.SettingsPath, "UPJTFO23.settings");
 			UserPreferences.Load();
 			LoadedTaskLists = new LoadedTaskLists(Path.Combine(LoginWindow.SettingsPath, "Tasks"), "JTL0384.jgtlf");
@@ -118,7 +120,16 @@ namespace JiraTasks
 		//Data Grid View Events
 		private void dgJiraTaskList_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
 		{
-			DataGridViewCellDoubleClicked(e.RowIndex, e.ColumnIndex, dgJiraTaskList);
+			if (e.RowIndex >= 0 && e.ColumnIndex == NotesColumnIndex)
+				EditNotes(e.RowIndex, e.ColumnIndex);
+			else if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+				DataGridViewCellDoubleClicked(e.RowIndex, e.ColumnIndex, dgJiraTaskList);
+		}
+
+		private void EditNotes(int row, int column)
+		{
+			dgJiraTaskList.CurrentCell = dgJiraTaskList.Rows[row].Cells[column];
+			dgJiraTaskList.BeginEdit(true);
 		}
 
 		private void dgJiraTaskList_SelectionChanged(object sender, EventArgs e)
@@ -128,7 +139,12 @@ namespace JiraTasks
 
 		private void dgJiraTaskList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
 		{
-			if (e.ColumnIndex == NotesColumnIndex)
+			if (e.ColumnIndex == NotesColumnIndex && IsLoading)
+			{
+				MessageBox.Show("Cannot add notes while data grid view is loading", "Load Error", MessageBoxButtons.OK,
+					MessageBoxIcon.Error);
+			}
+			else if (e.ColumnIndex == NotesColumnIndex)
 			{
 				SaveNotesToTask(
 					dgJiraTaskList.Rows[e.RowIndex].Cells[DevTaskColumnIndex].Value.ToString(),
@@ -141,9 +157,10 @@ namespace JiraTasks
 			SaveSortPreferences();
 		}
 
-		private void dgJiraTaskList_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+		private void dgJiraTaskList_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
 		{
-			if (e.Button == MouseButtons.Right && e.RowIndex > -1 && e.ColumnIndex > -1)
+			CurrentRowColumn = new RowColumn { Column = e.ColumnIndex, Row = e.RowIndex };
+			if (e.Button == MouseButtons.Right && CurrentRowColumn.Row > -1 && CurrentRowColumn.Column > -1)
 			{
 				ContextMenuStrip mnu = new ContextMenuStrip();
 				ToolStripMenuItem mnuLogWork = new ToolStripMenuItem("Log Work");
@@ -156,20 +173,18 @@ namespace JiraTasks
 				mnuLogWork.Click += dvgTaskContextMenu_LogWork;
 				mnuMarkIrrelevant.Click += dvgTaskContextMenu_MarkIrrelevant;
 
-				CurrentRowColumn.Row = e.RowIndex;
-				CurrentRowColumn.Column = e.ColumnIndex;
-
 				//Add to main context menu
 				mnu.Items.AddRange(new ToolStripItem[] { mnuMarkIrrelevant, mnuLogWork, mnuAddLink, mnuRemoveLink });
-				//mnu.Show(this,new Point(e.X,e.Y));
-				dgJiraTaskList.ContextMenuStrip = mnu;
-				dgJiraTaskList.ContextMenuStrip.Show();
+				//mnu.Show(dgJiraTaskList, new Point(e.ColumnIndex, e.RowIndex));
+				var r = dgJiraTaskList.GetCellDisplayRectangle(CurrentRowColumn.Column, CurrentRowColumn.Row, false);
+				mnu.Show(new Point(r.X + r.Width, r.Y));
 			}
 		}
 
 		//Data Grid View Sub Menu Item Events
 		private void dgvtaskContextMenu_RemoveLink(object sender, EventArgs e)
 		{
+			RemoveLinkBetweenTasks(CurrentRowColumn.Row);
 			MessageBox.Show("Not Yet Implemented!");
 			dgJiraTaskList.ContextMenuStrip = null;
 			//TODO: Cast e and see if that gives me what I want
@@ -178,10 +193,7 @@ namespace JiraTasks
 
 		private void dgvtaskContextMenu_AddLink(object sender, EventArgs e)
 		{
-			MessageBox.Show($"Not Yet Implemented! {CurrentRowColumn.Row} {CurrentRowColumn.Column}");
-			dgJiraTaskList.ContextMenuStrip = null;
-			//TODO: Cast e and see if that gives me what I want
-			//TaskBusi.RemoveLink("MainTask", "LinkedTask");
+			CreateLinkWindowCreation(dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[DevTaskColumnIndex].Value.ToString());
 		}
 
 		private void dvgTaskContextMenu_LogWork(object sender, EventArgs e)
@@ -192,6 +204,12 @@ namespace JiraTasks
 
 		private void dvgTaskContextMenu_MarkIrrelevant(object sender, EventArgs e)
 		{
+			if (IsLoading)
+			{
+				MessageBox.Show("Cannot change a task status while data grid view is loading", "Load Error", MessageBoxButtons.OK,
+					MessageBoxIcon.Error);
+				return;
+			}
 			var devTaskCell = dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[DevTaskColumnIndex];
 			var currentCell = dgJiraTaskList.Rows[CurrentRowColumn.Row].Cells[MyTaskColumnIndex];
 			if (currentCell.Style.BackColor == UserPreferences.ColorLegend.IrrelevantTasks)
@@ -234,7 +252,7 @@ namespace JiraTasks
 		{
 			loadingPanel.Visible = true;
 			bRefresh.Visible = false;
-
+			IsLoading = true;
 			if (!clearOriginalGrid)
 				InitializeGridHeadersAndOptions();
 
@@ -261,6 +279,7 @@ namespace JiraTasks
 			LoadedTaskLists.ReplaceTasks("LatestLoad", Tasks.Tasks);
 			LoadRefreshButton();
 			loadingPanel.Visible = false;
+			IsLoading = false;
 		}
 
 		private void LoadTasksAndSortOrderToGridView()
@@ -342,23 +361,15 @@ namespace JiraTasks
 
 		private void DataGridViewCellDoubleClicked(int row, int column, DataGridView dataGrid)
 		{
-			if (row >= 0 && column == NotesColumnIndex)
-			{
-				dgJiraTaskList.CurrentCell = dgJiraTaskList.Rows[row].Cells[column];
-				dgJiraTaskList.BeginEdit(true);
-			}
-			else if (row >= 0 && column >= 0)
-			{
-				if (column == MyTaskColumnIndex && (string)dataGrid.Rows[row].Cells[column].Value != "")
-					System.Diagnostics.Process.Start(
-						$"https://epm.verisk.com/jira/browse/{dataGrid.Rows[row].Cells[column].Value}");
-				else if (column == MyTaskColumnIndex)
-					CreateLinkWindowCreation(dataGrid.Rows[row].Cells[DevTaskColumnIndex].Value.ToString());
-				else
-					System.Diagnostics.Process.Start(
-						$"https://epm.verisk.com/jira/browse/{dataGrid.Rows[row].Cells[DevTaskColumnIndex].Value}");
-				Console.WriteLine(dataGrid?.Rows[row].Cells[column].Value);
-			}
+			if (column == MyTaskColumnIndex && (string)dataGrid.Rows[row].Cells[column].Value != "")
+				System.Diagnostics.Process.Start(
+					$"https://epm.verisk.com/jira/browse/{dataGrid.Rows[row].Cells[column].Value}");
+			else if (column == MyTaskColumnIndex)
+				CreateLinkWindowCreation(dataGrid.Rows[row].Cells[DevTaskColumnIndex].Value.ToString());
+			else
+				System.Diagnostics.Process.Start(
+					$"https://epm.verisk.com/jira/browse/{dataGrid.Rows[row].Cells[DevTaskColumnIndex].Value}");
+			Console.WriteLine(dataGrid?.Rows[row].Cells[column].Value);
 		}
 
 		/// <summary>
@@ -406,6 +417,23 @@ namespace JiraTasks
 			return true;
 		}
 
+		private void RemoveLinkBetweenTasks(int row)
+		{
+			var mainTask = dgJiraTaskList.Rows[row].Cells[DevTaskColumnIndex].Value.ToString();
+			var linkedTask = dgJiraTaskList.Rows[row].Cells[MyTaskColumnIndex].Value.ToString();
+			//If linked task meets filtered criteria, we need to add it back to the dgv as it's own task
+			if (TaskBusi.TaskMatchesFilter(linkedTask))
+			{
+				Tasks.AddTask(new Issue(new Jira(new ServiceLocator()), ""));
+
+			}
+			// Otherwise, just remove it from the main task
+			// We'll need to also remove the link in the userprefs
+			dgJiraTaskList.Rows[row].Cells[MyTaskColumnIndex].Value = "";
+			UserPreferences.LinkedTaskList.Remove(mainTask);
+			UserPreferences.Save();
+		}
+
 		private void AutoAdjustColumnWidths()
 		{
 			dgJiraTaskList.Columns[SummaryColumnIndex].Width = (int)(WorkingWidth * .2);
@@ -434,6 +462,12 @@ namespace JiraTasks
 
 		private void CreateLinkWindowCreation(string task = null)
 		{
+			if (IsLoading)
+			{
+				MessageBox.Show("Cannot link tasks while data grid view is loading", "Load Error", MessageBoxButtons.OK,
+					MessageBoxIcon.Error);
+				return;
+			}
 			var linkTasksWindow = task != null ? new LinkTasks(task) : new LinkTasks();
 			linkTasksWindow.ShowDialog();
 
@@ -540,10 +574,7 @@ namespace JiraTasks
 			var asdf = new FilterByDate(UserPreferences);
 			asdf.ShowDialog(this);
 			if (asdf.ValueChanged)
-			{
-				UserPreferences.Load();
 				LoadDataGridView(true);
-			}
 		}
 	}
 }

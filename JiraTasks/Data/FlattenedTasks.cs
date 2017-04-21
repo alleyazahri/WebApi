@@ -9,7 +9,7 @@ namespace JiraTasks.Data
 {
 	public class FlattenedTasks
 	{
-		public List<FlattenedTask> Tasks { get; set; }
+		public List<FlattenedTask> Tasks { get; private set; }
 		private UserPrefs UserPreferences { get; }
 		private TaskController TaskController { get; }
 
@@ -107,6 +107,11 @@ namespace JiraTasks.Data
 			task.LinkedTaskName = linkedTask;
 			task.LinkedTaskColor = GetTaskColor(linkedTask);
 			return task;
+		}
+
+		public void AddTask(Issue issue)
+		{
+			Tasks.Add();
 		}
 	}
 

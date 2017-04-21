@@ -167,7 +167,7 @@ namespace JiraTasks
 			if (dateTimeModifiedEnd.CustomFormat != " ")
 				UserPreferences.ModifiedDateRange.End = dateTimeModifiedEnd.Value.Date;
 			else
-				UserPreferences.ModifiedDateRange.Start = null;
+				UserPreferences.ModifiedDateRange.End = null;
 
 			//Closed Dates
 			if (dateTimeClosedStart.CustomFormat != " ")
@@ -177,7 +177,7 @@ namespace JiraTasks
 			if (dateTimeClosedEnd.CustomFormat != " ")
 				UserPreferences.ClosedDateRange.End = dateTimeClosedEnd.Value.Date;
 			else
-				UserPreferences.ClosedDateRange.Start = null;
+				UserPreferences.ClosedDateRange.End = null;
 
 			UserPreferences.Save();
 		}

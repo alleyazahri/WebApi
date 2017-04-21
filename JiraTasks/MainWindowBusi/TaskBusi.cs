@@ -17,6 +17,11 @@ namespace JiraTasks.MainWindowBusi
             return TaskController.GetIssues(filter: filter);
         }
 
+	    internal bool TaskMatchesFilter(string taskName)
+	    {
+		    return false;
+	    }
+
         internal List<CompoundIssue> CompareTasksToUserPrefs(List<Issue> tasks, Dictionary<string, string> linkedTasks)
         {
             var issueList = new List<CompoundIssue>();
