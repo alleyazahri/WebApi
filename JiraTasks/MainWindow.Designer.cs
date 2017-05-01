@@ -233,9 +233,9 @@
 			// 
 			this.loadingPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.loadingPanel.Controls.Add(this.label2);
-			this.loadingPanel.Location = new System.Drawing.Point(1036, 763);
+			this.loadingPanel.Location = new System.Drawing.Point(1012, 763);
 			this.loadingPanel.Name = "loadingPanel";
-			this.loadingPanel.Size = new System.Drawing.Size(464, 43);
+			this.loadingPanel.Size = new System.Drawing.Size(488, 43);
 			this.loadingPanel.TabIndex = 4;
 			this.loadingPanel.Visible = false;
 			// 
@@ -244,7 +244,7 @@
 			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.label2.AutoSize = true;
 			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label2.Location = new System.Drawing.Point(12, 10);
+			this.label2.Location = new System.Drawing.Point(9, 10);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(448, 25);
 			this.label2.TabIndex = 0;

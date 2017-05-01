@@ -1,4 +1,5 @@
-﻿using JiraApi;
+﻿using Atlassian.Jira;
+using JiraApi;
 using JiraTasks.Data;
 using JiraTasks.MainWindowBusi;
 using JiraTasks.Properties;
@@ -10,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Atlassian.Jira;
 
 namespace JiraTasks
 {
@@ -42,7 +42,8 @@ namespace JiraTasks
 		#endregion Properties
 
 		/// <summary>
-		/// Initializes the TaskList window
+		/// Initializes the TaskList window, login window, user preferences, loaded task list,
+		/// project menu, and task busi.
 		/// </summary>
 		public MainWindow()
 		{
@@ -64,7 +65,7 @@ namespace JiraTasks
 		//Main Menu Item Events
 		private void colorKeyToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ColorKeyWindow asdf = new ColorKeyWindow();
+			ColorKeyWindow asdf = new ColorKeyWindow(UserPreferences);
 			asdf.ShowDialog();
 		}
 
@@ -425,7 +426,6 @@ namespace JiraTasks
 			if (TaskBusi.TaskMatchesFilter(linkedTask))
 			{
 				Tasks.AddTask(new Issue(new Jira(new ServiceLocator()), ""));
-
 			}
 			// Otherwise, just remove it from the main task
 			// We'll need to also remove the link in the userprefs

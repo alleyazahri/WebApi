@@ -9,7 +9,7 @@ namespace JiraTasks.Data
 {
 	public class FlattenedTasks
 	{
-		public List<FlattenedTask> Tasks { get; private set; }
+		public List<FlattenedTask> Tasks { get; set; }
 		private UserPrefs UserPreferences { get; }
 		private TaskController TaskController { get; }
 
@@ -25,21 +25,30 @@ namespace JiraTasks.Data
 			Tasks = new List<FlattenedTask>();
 			foreach (var issue in issues)
 			{
-				var linkedTask = GetLinkTaskName(issue.Key.Value);
-				var flatTask = new FlattenedTask
+				if (IssueShouldBeAdded(issues, issue.Key.Value))
 				{
-					DevTaskName = issue.Key.Value,
-					DevTaskColor = GetTaskColor(issue),
-					Description = issue.Description,
-					Status = issue.Status.Name,
-					Summary = issue.Summary,
-					LinkedTaskName = linkedTask,
-					LinkedTaskColor = GetTaskColor(linkedTask),
-					Notes = UserPreferences.Notes.ContainsKey(issue.Key.Value) ? UserPreferences.Notes[issue.Key.Value] : "",
-					IsIrreleventTask = UserPreferences.IrrelevantTasks.Contains(issue.Key.Value)
-				};
-				Tasks.Add(flatTask);
+					var linkedTask = GetLinkTaskName(issue.Key.Value);
+					var flatTask = new FlattenedTask
+					{
+						DevTaskName = issue.Key.Value,
+						DevTaskColor = GetTaskColor(issue),
+						Description = issue.Description,
+						Status = issue.Status.Name,
+						Summary = issue.Summary,
+						LinkedTaskName = linkedTask,
+						LinkedTaskColor = GetTaskColor(linkedTask),
+						Notes = UserPreferences.Notes.ContainsKey(issue.Key.Value) ? UserPreferences.Notes[issue.Key.Value] : "",
+						IsIrreleventTask = UserPreferences.IrrelevantTasks.Contains(issue.Key.Value)
+					};
+					Tasks.Add(flatTask);
+				}
 			}
+		}
+
+		private bool IssueShouldBeAdded(List<Issue> issues, string issue)
+		{
+			var linkedTasks = UserPreferences.LinkedTaskList.FirstOrDefault(t => t.Value == issue);
+			return linkedTasks.Key == null || linkedTasks.Value == null || issues.All(i => i.Key.Value != linkedTasks.Key);
 		}
 
 		private string GetLinkTaskName(string issueKey)
@@ -47,14 +56,9 @@ namespace JiraTasks.Data
 			return UserPreferences.LinkedTaskList.ContainsKey(issueKey) ? UserPreferences.LinkedTaskList[issueKey] : null;
 		}
 
-		////////////////////////////////////////////////////////////////////////////////////////////////////
 		/// <summary>	Gets the task color based on a string value. </summary>
-		///
 		/// <param name="value">	The task name or task-less status. </param>
-		///
 		/// <returns>	The task color. </returns>
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-
 		private Color? GetTaskColor(string value)
 		{
 			if (value == null)
@@ -63,6 +67,9 @@ namespace JiraTasks.Data
 			{
 				case "~C-InProgress":
 					return UserPreferences.ColorLegend.InProgressTasks;
+
+				case "~C-CodeReview":
+					return UserPreferences.ColorLegend.CodeReviewTasks;
 
 				case "~C-Complete":
 					return UserPreferences.ColorLegend.CompletedTasks;
@@ -85,10 +92,16 @@ namespace JiraTasks.Data
 			{
 				case "Integration Testing":
 				case "Functional Testing":
+					return UserPreferences.ColorLegend.TasksInTest;
+
 				case "In Progress":
-				case "Acceptance Testing":
-				case "Code Review":
 					return UserPreferences.ColorLegend.InProgressTasks;
+
+				case "Acceptance Testing":
+					return UserPreferences.ColorLegend.TasksInBeta;
+
+				case "Code Review":
+					return UserPreferences.ColorLegend.CodeReviewTasks;
 
 				case "Ready to Merge":
 				case "Closed":
@@ -111,7 +124,19 @@ namespace JiraTasks.Data
 
 		public void AddTask(Issue issue)
 		{
-			Tasks.Add();
+			var linkedTask = GetLinkTaskName(issue.Key.Value);
+			Tasks.Add(new FlattenedTask
+			{
+				DevTaskName = issue.Key.Value,
+				DevTaskColor = GetTaskColor(issue),
+				Description = issue.Description,
+				Status = issue.Status.Name,
+				Summary = issue.Summary,
+				LinkedTaskName = linkedTask,
+				LinkedTaskColor = GetTaskColor(linkedTask),
+				Notes = UserPreferences.Notes.ContainsKey(issue.Key.Value) ? UserPreferences.Notes[issue.Key.Value] : "",
+				IsIrreleventTask = UserPreferences.IrrelevantTasks.Contains(issue.Key.Value)
+			});
 		}
 	}
 

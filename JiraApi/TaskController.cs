@@ -8,7 +8,7 @@ namespace JiraApi
 	public class TaskController
 	{
 		private LoginController Lc { get; }
-		private const int TaskNum = 10;
+		private const int TaskNum = 9999;
 
 		public TaskController(LoginController loginController)
 		{
