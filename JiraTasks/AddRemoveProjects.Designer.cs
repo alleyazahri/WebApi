@@ -44,6 +44,8 @@
             this.dgvAddRemoveProjects.RowTemplate.Height = 24;
             this.dgvAddRemoveProjects.Size = new System.Drawing.Size(738, 228);
             this.dgvAddRemoveProjects.TabIndex = 0;
+            this.dgvAddRemoveProjects.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dgvAddRemoveProjects_CellBeginEdit);
+            this.dgvAddRemoveProjects.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAddRemoveProjects_CellContentClick);
             this.dgvAddRemoveProjects.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvAddRemoveProjects_CellEndEdit);
             // 
             // bSaveChanges

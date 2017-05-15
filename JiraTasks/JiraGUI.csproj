@@ -76,11 +76,19 @@
     </Compile>
     <Compile Include="Data\ColorKey.cs" />
     <Compile Include="Data\CompoundIssue.cs" />
+    <Compile Include="Data\FlattenedTasks.cs" />
     <Compile Include="Data\IssueExtension.cs" />
     <Compile Include="Data\JiraIssue.cs" />
+    <Compile Include="Data\LoadedTaskLists.cs" />
     <Compile Include="Data\LoginSettingsDocument.cs" />
     <Compile Include="Data\RowColumn.cs" />
     <Compile Include="Data\UserPrefs.cs" />
+    <Compile Include="FilterByDate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FilterByDate.Designer.cs">
+      <DependentUpon>FilterByDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="LinkTasks.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +108,7 @@
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="MainWindowBusi\BaseBusi.cs" />
+    <Compile Include="MainWindowBusi\DataGridBusi.cs" />
     <Compile Include="MainWindowBusi\TaskBusi.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -108,6 +117,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ColorKeyWindow.resx">
       <DependentUpon>ColorKeyWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FilterByDate.resx">
+      <DependentUpon>FilterByDate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LinkTasks.resx">
       <DependentUpon>LinkTasks.cs</DependentUpon>
@@ -154,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="fella.ico" />
+    <Content Include="Images\RefreshButton.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

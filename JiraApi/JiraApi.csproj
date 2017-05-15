@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataClasses\DateTimeRange.cs" />
     <Compile Include="LoginController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskController.cs" />

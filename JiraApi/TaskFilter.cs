@@ -1,4 +1,4 @@
-﻿using System;
+﻿using JiraApi.DataClasses;
 using System.Collections.Generic;
 
 namespace JiraApi
@@ -26,9 +26,11 @@ namespace JiraApi
         //public List<string> Descriptions { get; set; }
 
         //public List<string> Environments { get; set; }
-        public DateTime? ResolutionDateAfter { get; set; }
+        public DateTimeRange ResolutionDateRange { get; set; }
 
-        public DateTime? UpdatedSince { get; set; }
+        public DateTimeRange UpdatedDateRange { get; set; }
+
+        public DateTimeRange CreatedDateRange { get; set; }
 
         /// <summary>
         /// i.e. XWESVC (the first portion of the task number)
@@ -42,10 +44,12 @@ namespace JiraApi
                 nnprops += "s";
             if (AssigneeIds != null && AssigneeIds.Count > 0)
                 nnprops += "a";
-            if (ResolutionDateAfter != null)
+            if (ResolutionDateRange != null)
                 nnprops += "r";
-            if (UpdatedSince != null)
+            if (UpdatedDateRange != null)
                 nnprops += "u";
+            if (CreatedDateRange != null)
+                nnprops += "c";
             if (Project != null && Project.Count > 0)
                 nnprops += "p";
             if (nnprops.Length == 5)

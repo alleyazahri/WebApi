@@ -17,6 +17,11 @@ namespace JiraTasks.MainWindowBusi
             return TaskController.GetIssues(filter: filter);
         }
 
+	    internal bool TaskMatchesFilter(string taskName)
+	    {
+		    return false;
+	    }
+
         internal List<CompoundIssue> CompareTasksToUserPrefs(List<Issue> tasks, Dictionary<string, string> linkedTasks)
         {
             var issueList = new List<CompoundIssue>();
@@ -25,7 +30,10 @@ namespace JiraTasks.MainWindowBusi
             {
                 if (linkedTasks.ContainsKey(issue.Key.Value))
                 {
-                    issueList.Add(new CompoundIssue() { DevTask = issue, LinkedTask = TaskController.GetIssue(linkedTasks[issue.Key.Value]) });
+                    if (linkedTasks[issue.Key.Value].Contains("~C"))
+                        issueList.Add(new CompoundIssue { DevTask = issue, NoLinkedTaskStatus = linkedTasks[issue.Key.Value] });
+                    else
+                        issueList.Add(new CompoundIssue() { DevTask = issue, LinkedTask = TaskController.GetIssue(linkedTasks[issue.Key.Value]) });
                     removeIssues.Add(linkedTasks[issue.Key.Value]);
                 }
                 else
@@ -57,13 +65,9 @@ namespace JiraTasks.MainWindowBusi
 
         public bool VerifyProjectExists(string projectName)
         {
-            var filter = new TaskFilter()
-            {
-                Project = new List<string>() { projectName.ToUpper() }
-            };
             try
             {
-                TaskController.GetIssues(1, filter);
+                TaskController.GetIssuesInProject(projectName, 1);
                 return true;
             }
             catch (AggregateException)

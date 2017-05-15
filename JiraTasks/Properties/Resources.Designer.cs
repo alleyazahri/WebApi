@@ -59,5 +59,79 @@ namespace JiraTasks.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        internal static string DescriptionHeader {
+            get {
+                return ResourceManager.GetString("DescriptionHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task to Follow.
+        /// </summary>
+        internal static string DevTaskHeader {
+            get {
+                return ResourceManager.GetString("DevTaskHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My Task.
+        /// </summary>
+        internal static string MyTaskHeader {
+            get {
+                return ResourceManager.GetString("MyTaskHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notes.
+        /// </summary>
+        internal static string NotesHeader {
+            get {
+                return ResourceManager.GetString("NotesHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RefreshButton {
+            get {
+                object obj = ResourceManager.GetObject("RefreshButton", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RefreshButton1 {
+            get {
+                object obj = ResourceManager.GetObject("RefreshButton1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        internal static string StatusHeader {
+            get {
+                return ResourceManager.GetString("StatusHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Summary.
+        /// </summary>
+        internal static string SummaryHeader {
+            get {
+                return ResourceManager.GetString("SummaryHeader", resourceCulture);
+            }
+        }
     }
 }
