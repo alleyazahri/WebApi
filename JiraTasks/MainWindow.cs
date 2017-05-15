@@ -14,7 +14,6 @@ using System.Windows.Forms;
 
 namespace JiraTasks
 {
-	//TODO: Add error to tell user they cannot link tasks or add notes while the grid view is still loading
 	public partial class MainWindow : Form
 	{
 		#region Properties
@@ -54,7 +53,7 @@ namespace JiraTasks
 			LoadedTaskLists = new LoadedTaskLists(Path.Combine(LoginWindow.SettingsPath, "Tasks"), "JTL0384.jgtlf");
 			LoadedTaskLists.Load();
 			LoadProjectMenu();
-			TaskBusi = new TaskBusi(LoginWindow.LogCont);
+			TaskBusi = new TaskBusi(LoginWindow.LoginController);
 			Tasks = new FlattenedTasks(UserPreferences, TaskBusi.TaskController);
 			if (LoginWindow.loginSettings.SavePassword != CheckState.Checked)
 				LoginWindow.ShowDialog();
@@ -78,7 +77,7 @@ namespace JiraTasks
 		{
 			pLoginToViewTasks.Visible = false;
 			LoginWindow.ShowDialog();
-			if (LoginWindow.LogCont != null && LoginWindow.LogCont.IsLoggedIn())
+			if (LoginWindow.LoginController != null && LoginWindow.LoginController.IsLoggedIn())
 				LoadDataGridView();
 			else
 				pLoginToViewTasks.Visible = true;
@@ -105,8 +104,7 @@ namespace JiraTasks
 		private void MainWindow_Shown(object sender, EventArgs e)
 		{
 			Cursor.Current = Cursors.WaitCursor;
-			//TODO: Add a 'Loading' Label :)
-			if (LoginWindow.LogCont != null && LoginWindow.LogCont.IsLoggedIn())
+			if (LoginWindow.LoginController != null && LoginWindow.LoginController.IsLoggedIn())
 				LoadDataGridView(loadFromSavedSettings: true);
 			else
 				pLoginToViewTasks.Visible = true;
@@ -450,7 +448,7 @@ namespace JiraTasks
 			LoadedTaskLists.JiraIssueTaskLists = null;
 			LoadedTaskLists.Save();
 			dgJiraTaskList.Rows.Clear();
-			LoginWindow.LogCont = new LoginController();
+			LoginWindow.LoginController = new LoginController();
 			LoginWindow.loginSettings.ClearUser();
 			LoginWindow.loginSettings.Save(LoginWindow.SettingsPath, LoginWindow.SettingsFile);
 			pLoginToViewTasks.Visible = true;
@@ -575,6 +573,16 @@ namespace JiraTasks
 			asdf.ShowDialog(this);
 			if (asdf.ValueChanged)
 				LoadDataGridView(true);
+		}
+
+		private void setRemoveFilterToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show("Not yet implemented", "Not Yet Implemented", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+		}
+
+		private void clearAllLinksToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show("Not yet implemented", "Not Yet Implemented", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 		}
 	}
 }

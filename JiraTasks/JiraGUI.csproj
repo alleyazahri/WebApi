@@ -89,6 +89,12 @@
     <Compile Include="FilterByDate.Designer.cs">
       <DependentUpon>FilterByDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="LinkedTaskFilterOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LinkedTaskFilterOptions.Designer.cs">
+      <DependentUpon>LinkedTaskFilterOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="LinkTasks.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FilterByDate.resx">
       <DependentUpon>FilterByDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LinkedTaskFilterOptions.resx">
+      <DependentUpon>LinkedTaskFilterOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LinkTasks.resx">
       <DependentUpon>LinkTasks.cs</DependentUpon>

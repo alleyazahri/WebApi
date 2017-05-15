@@ -50,6 +50,9 @@
 			this.bRefresh = new System.Windows.Forms.Button();
 			this.loadingPanel = new System.Windows.Forms.Panel();
 			this.label2 = new System.Windows.Forms.Label();
+			this.linkTaskOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.setRemoveFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.clearAllLinksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.dgJiraTaskList)).BeginInit();
 			this.menuStrip1.SuspendLayout();
 			this.pLoginToViewTasks.SuspendLayout();
@@ -82,10 +85,11 @@
             this.filterToolStripMenuItem,
             this.savedFiltersToolStripMenuItem,
             this.tasksToolStripMenuItem,
+            this.linkTaskOptionsToolStripMenuItem,
             this.helpToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(1512, 33);
+			this.menuStrip1.Size = new System.Drawing.Size(1512, 28);
 			this.menuStrip1.TabIndex = 1;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -95,14 +99,14 @@
             this.loginToolStripMenuItem,
             this.logoutToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-			this.fileToolStripMenuItem.Size = new System.Drawing.Size(50, 29);
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
 			this.fileToolStripMenuItem.Text = "&File";
 			// 
 			// loginToolStripMenuItem
 			// 
 			this.loginToolStripMenuItem.Name = "loginToolStripMenuItem";
 			this.loginToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.L)));
-			this.loginToolStripMenuItem.Size = new System.Drawing.Size(214, 30);
+			this.loginToolStripMenuItem.Size = new System.Drawing.Size(180, 26);
 			this.loginToolStripMenuItem.Text = "&Login";
 			this.loginToolStripMenuItem.Click += new System.EventHandler(this.loginToolStripMenuItem_Click);
 			// 
@@ -110,7 +114,7 @@
 			// 
 			this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
 			this.logoutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
-			this.logoutToolStripMenuItem.Size = new System.Drawing.Size(214, 30);
+			this.logoutToolStripMenuItem.Size = new System.Drawing.Size(180, 26);
 			this.logoutToolStripMenuItem.Text = "L&ogout";
 			this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
 			// 
@@ -120,7 +124,7 @@
             this.projectsToolStripMenuItem,
             this.datesToolStripMenuItem});
 			this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-			this.filterToolStripMenuItem.Size = new System.Drawing.Size(62, 29);
+			this.filterToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
 			this.filterToolStripMenuItem.Text = "Filter";
 			// 
 			// projectsToolStripMenuItem
@@ -128,20 +132,20 @@
 			this.projectsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addProjectToolStripMenuItem});
 			this.projectsToolStripMenuItem.Name = "projectsToolStripMenuItem";
-			this.projectsToolStripMenuItem.Size = new System.Drawing.Size(159, 30);
+			this.projectsToolStripMenuItem.Size = new System.Drawing.Size(136, 26);
 			this.projectsToolStripMenuItem.Text = "Projects";
 			// 
 			// addProjectToolStripMenuItem
 			// 
 			this.addProjectToolStripMenuItem.Name = "addProjectToolStripMenuItem";
-			this.addProjectToolStripMenuItem.Size = new System.Drawing.Size(261, 30);
+			this.addProjectToolStripMenuItem.Size = new System.Drawing.Size(222, 26);
 			this.addProjectToolStripMenuItem.Text = "Add/Remove Project";
 			this.addProjectToolStripMenuItem.Click += new System.EventHandler(this.addProjectToolStripMenuItem_Click);
 			// 
 			// datesToolStripMenuItem
 			// 
 			this.datesToolStripMenuItem.Name = "datesToolStripMenuItem";
-			this.datesToolStripMenuItem.Size = new System.Drawing.Size(159, 30);
+			this.datesToolStripMenuItem.Size = new System.Drawing.Size(136, 26);
 			this.datesToolStripMenuItem.Text = "Dates";
 			this.datesToolStripMenuItem.Click += new System.EventHandler(this.datesToolStripMenuItem_Click);
 			// 
@@ -150,13 +154,13 @@
 			this.savedFiltersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveCurrentFilterToolStripMenuItem});
 			this.savedFiltersToolStripMenuItem.Name = "savedFiltersToolStripMenuItem";
-			this.savedFiltersToolStripMenuItem.Size = new System.Drawing.Size(123, 29);
+			this.savedFiltersToolStripMenuItem.Size = new System.Drawing.Size(104, 24);
 			this.savedFiltersToolStripMenuItem.Text = "Saved Filters";
 			// 
 			// saveCurrentFilterToolStripMenuItem
 			// 
 			this.saveCurrentFilterToolStripMenuItem.Name = "saveCurrentFilterToolStripMenuItem";
-			this.saveCurrentFilterToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+			this.saveCurrentFilterToolStripMenuItem.Size = new System.Drawing.Size(214, 26);
 			this.saveCurrentFilterToolStripMenuItem.Text = "+Save Current Filter";
 			// 
 			// tasksToolStripMenuItem
@@ -165,20 +169,20 @@
             this.linkTaskToolStripMenuItem,
             this.unlinkTaskToolStripMenuItem});
 			this.tasksToolStripMenuItem.Name = "tasksToolStripMenuItem";
-			this.tasksToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
+			this.tasksToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
 			this.tasksToolStripMenuItem.Text = "Tasks";
 			// 
 			// linkTaskToolStripMenuItem
 			// 
 			this.linkTaskToolStripMenuItem.Name = "linkTaskToolStripMenuItem";
-			this.linkTaskToolStripMenuItem.Size = new System.Drawing.Size(184, 30);
+			this.linkTaskToolStripMenuItem.Size = new System.Drawing.Size(156, 26);
 			this.linkTaskToolStripMenuItem.Text = "Link Task";
 			this.linkTaskToolStripMenuItem.Click += new System.EventHandler(this.linkTaskToolStripMenuItem_Click);
 			// 
 			// unlinkTaskToolStripMenuItem
 			// 
 			this.unlinkTaskToolStripMenuItem.Name = "unlinkTaskToolStripMenuItem";
-			this.unlinkTaskToolStripMenuItem.Size = new System.Drawing.Size(184, 30);
+			this.unlinkTaskToolStripMenuItem.Size = new System.Drawing.Size(156, 26);
 			this.unlinkTaskToolStripMenuItem.Text = "Unlink Task";
 			// 
 			// helpToolStripMenuItem
@@ -186,13 +190,13 @@
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.colorKeyToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(61, 29);
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
 			this.helpToolStripMenuItem.Text = "Help";
 			// 
 			// colorKeyToolStripMenuItem
 			// 
 			this.colorKeyToolStripMenuItem.Name = "colorKeyToolStripMenuItem";
-			this.colorKeyToolStripMenuItem.Size = new System.Drawing.Size(173, 30);
+			this.colorKeyToolStripMenuItem.Size = new System.Drawing.Size(148, 26);
 			this.colorKeyToolStripMenuItem.Text = "Color Key";
 			this.colorKeyToolStripMenuItem.Click += new System.EventHandler(this.colorKeyToolStripMenuItem_Click);
 			// 
@@ -212,7 +216,7 @@
 			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label1.Location = new System.Drawing.Point(220, 14);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(326, 29);
+			this.label1.Size = new System.Drawing.Size(267, 25);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "Please Log In To View Tasks";
 			// 
@@ -246,9 +250,32 @@
 			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label2.Location = new System.Drawing.Point(9, 10);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(448, 25);
+			this.label2.Size = new System.Drawing.Size(380, 20);
 			this.label2.TabIndex = 0;
 			this.label2.Text = "...Loading. This Will Likely Take Several Minutes...";
+			// 
+			// linkTaskOptionsToolStripMenuItem
+			// 
+			this.linkTaskOptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.setRemoveFilterToolStripMenuItem,
+            this.clearAllLinksToolStripMenuItem});
+			this.linkTaskOptionsToolStripMenuItem.Name = "linkTaskOptionsToolStripMenuItem";
+			this.linkTaskOptionsToolStripMenuItem.Size = new System.Drawing.Size(134, 24);
+			this.linkTaskOptionsToolStripMenuItem.Text = "Link Task Options";
+			// 
+			// setRemoveFilterToolStripMenuItem
+			// 
+			this.setRemoveFilterToolStripMenuItem.Name = "setRemoveFilterToolStripMenuItem";
+			this.setRemoveFilterToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
+			this.setRemoveFilterToolStripMenuItem.Text = "Set/Remove Filter";
+			this.setRemoveFilterToolStripMenuItem.Click += new System.EventHandler(this.setRemoveFilterToolStripMenuItem_Click);
+			// 
+			// clearAllLinksToolStripMenuItem
+			// 
+			this.clearAllLinksToolStripMenuItem.Name = "clearAllLinksToolStripMenuItem";
+			this.clearAllLinksToolStripMenuItem.Size = new System.Drawing.Size(202, 26);
+			this.clearAllLinksToolStripMenuItem.Text = "Clear All Links";
+			this.clearAllLinksToolStripMenuItem.Click += new System.EventHandler(this.clearAllLinksToolStripMenuItem_Click);
 			// 
 			// MainWindow
 			// 
@@ -302,6 +329,9 @@
         private System.Windows.Forms.ToolStripMenuItem datesToolStripMenuItem;
 		private System.Windows.Forms.Panel loadingPanel;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.ToolStripMenuItem linkTaskOptionsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem setRemoveFilterToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem clearAllLinksToolStripMenuItem;
 	}
 }
 
