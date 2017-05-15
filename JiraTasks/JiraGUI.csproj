@@ -168,10 +168,6 @@
       <Project>{4F415344-627B-40CB-B8DB-2C5427BF6B64}</Project>
       <Name>JiraApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WpfApplication1\WpfApplication1.csproj">
-      <Project>{346FBEA3-62BB-4F3D-8589-731F16FC9501}</Project>
-      <Name>WpfApplication1</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="fella.ico" />
