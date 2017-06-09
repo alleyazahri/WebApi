@@ -239,9 +239,9 @@ namespace JiraApi
 			var tasks = new List<Issue>();
 			foreach (var project in filter.Project)
 			{
-				tasks.AddRange(Lc.JiraConnection.Issues.Queryable.Where(x => x.Project == project.ToUpper()).Take(TaskNum));
+				tasks.AddRange(Lc.JiraConnection.Issues.Queryable.Where(x => x.Project == project.ToUpper() && x.ResolutionDate == null).Take(TaskNum));
 			}
-			return tasks;
+			return tasks.Where(t => t.Components.FirstOrDefault(c => c.Name == "XM8Services") != null).ToList();
 		}
 
 		public List<Issue> GetIssues(int numIssues, List<Issue> issues, TaskFilter filter = null)
