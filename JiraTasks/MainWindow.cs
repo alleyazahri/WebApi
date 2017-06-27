@@ -28,9 +28,12 @@ namespace JiraTasks
 		private bool IsLoading { get; set; }
 
 		//Column Variables
-		private int DevTaskColumnIndex { get; set; }
+		private Dictionary<string, int> ColumnIndicies { get; set; }
 
+		private int DevTaskColumnIndex { get; set; }
+		private int DevTaskUserColumnIndex { get; set; }
 		private int MyTaskColumnIndex { get; set; }
+		private int MyTaskUserColumnIndex { get; set; }
 		private int StatusColumnIndex { get; set; }
 		private int SummaryColumnIndex { get; set; }
 		private int DescriptionColumnIndex { get; set; }
@@ -303,7 +306,9 @@ namespace JiraTasks
 		private void InitializeGridHeadersAndOptions()
 		{
 			dgJiraTaskList.Columns.Add("DevTask", Resources.DevTaskHeader);
+			dgJiraTaskList.Columns.Add("DevAssignee", Resources.DevAssigneeHeader);
 			dgJiraTaskList.Columns.Add("MyTask", Resources.MyTaskHeader);
+			dgJiraTaskList.Columns.Add("QAAssignee", Resources.QAAssigneeHeader);
 			dgJiraTaskList.Columns.Add(Resources.StatusHeader, Resources.StatusHeader);
 			dgJiraTaskList.Columns.Add("TaskName", Resources.SummaryHeader);
 			dgJiraTaskList.Columns.Add("TaskDescription", Resources.DescriptionHeader);
@@ -318,7 +323,9 @@ namespace JiraTasks
 
 			//Set all columns to ReadOnly except the Notes column
 			dgJiraTaskList.Columns[DevTaskColumnIndex].ReadOnly = true;
+			dgJiraTaskList.Columns[DevTaskColumnIndex].ReadOnly = true;
 			dgJiraTaskList.Columns[MyTaskColumnIndex].ReadOnly = true;
+			dgJiraTaskList.Columns[MyTaskUserColumnIndex].ReadOnly = true;
 			dgJiraTaskList.Columns[StatusColumnIndex].ReadOnly = true;
 			dgJiraTaskList.Columns[SummaryColumnIndex].ReadOnly = true;
 			dgJiraTaskList.Columns[DescriptionColumnIndex].ReadOnly = true;
@@ -558,12 +565,14 @@ namespace JiraTasks
 
 		private void LoadColumnIndexProperties()
 		{
-			DevTaskColumnIndex = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.DevTaskHeader).Index;
-			MyTaskColumnIndex = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.MyTaskHeader).Index;
-			StatusColumnIndex = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.StatusHeader).Index;
-			SummaryColumnIndex = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.SummaryHeader).Index;
-			DescriptionColumnIndex = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.DescriptionHeader).Index;
-			NotesColumnIndex = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.NotesHeader).Index;
+			ColumnIndicies[Resources.DevTaskHeader] = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.DevTaskHeader).Index;
+			ColumnIndicies[Resources.DevAssigneeHeader] = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.DevAssigneeHeader).Index;
+			ColumnIndicies[Resources.MyTaskHeader] = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.MyTaskHeader).Index;
+			ColumnIndicies[Resources.QAAssigneeHeader] = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.QAAssigneeHeader).Index;
+			ColumnIndicies[Resources.StatusHeader] = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.StatusHeader).Index;
+			ColumnIndicies[Resources.SummaryHeader] = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.SummaryHeader).Index;
+			ColumnIndicies[Resources.DescriptionHeader] = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.DescriptionHeader).Index;
+			ColumnIndicies[Resources.NotesHeader] = dgJiraTaskList.Columns.FirstOrDefault(x => x.HeaderText == Resources.NotesHeader).Index;
 		}
 
 		private void datesToolStripMenuItem_Click(object sender, EventArgs e)

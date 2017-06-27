@@ -142,4 +142,10 @@
   <data name="NotesHeader" xml:space="preserve">
     <value>Notes</value>
   </data>
+  <data name="DevAssigneeHeader" xml:space="preserve">
+    <value>Dev Assignee</value>
+  </data>
+  <data name="QAAssigneeHeader" xml:space="preserve">
+    <value>QA Assignee</value>
+  </data>
 </root>

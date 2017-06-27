@@ -70,6 +70,15 @@ namespace JiraTasks.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dev Assignee.
+        /// </summary>
+        internal static string DevAssigneeHeader {
+            get {
+                return ResourceManager.GetString("DevAssigneeHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Task to Follow.
         /// </summary>
         internal static string DevTaskHeader {
@@ -93,6 +102,15 @@ namespace JiraTasks.Properties {
         internal static string NotesHeader {
             get {
                 return ResourceManager.GetString("NotesHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to QA Assignee.
+        /// </summary>
+        internal static string QAAssigneeHeader {
+            get {
+                return ResourceManager.GetString("QAAssigneeHeader", resourceCulture);
             }
         }
         
