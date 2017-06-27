@@ -1,6 +1,6 @@
 *.vhost.exe.manifest
 *.vshost.exe.manifest
-WebApi/.vs/WebParseUtility/v14/.suo
+*.suo
 *.exe
 *.pdb
 *.cache
